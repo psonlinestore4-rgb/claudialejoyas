@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin · Claudiale Joyas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Montserrat:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-dorado: #d4af37;
+            --bg-dark: #050505;
+            --panel-bg: rgba(20, 20, 20, 0.6);
+            --border-light: rgba(255, 255, 255, 0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: var(--bg-dark); color: #fff; font-family: 'Montserrat', sans-serif; overflow: hidden; height: 100vh; }
+
+        /* --- VISTA DE LOGIN PREMIUM --- */
+        #login-view {
+            display: flex; justify-content: center; align-items: center; height: 100vh;
+            background: radial-gradient(circle at center, #111 0%, #000 100%);
+        }
+        .login-card {
+            background: var(--panel-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-light); padding: 60px 40px; border-radius: 20px;
+            text-align: center; width: 100%; max-width: 400px; box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+        }
+        .login-card h2 { font-family: 'Cormorant Garamond'; font-size: 2.5rem; letter-spacing: 4px; margin-bottom: 30px; font-weight: 300; }
+        .input-lujo {
+            width: 100%; background: rgba(0,0,0,0.5); border: 1px solid var(--border-light);
+            color: #fff; padding: 15px 20px; font-family: 'Montserrat'; font-size: 12px;
+            border-radius: 8px; outline: none; margin-bottom: 20px; transition: 0.3s;
+        }
+        .input-lujo:focus { border-color: var(--color-dorado); }
+        .btn-lujo {
+            width: 100%; background: #fff; color: #000; border: none; padding: 15px;
+            border-radius: 8px; font-family: 'Montserrat'; font-size: 11px; font-weight: 600;
+            letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: 0.3s;
+        }
+        .btn-lujo:hover { background: var(--color-dorado); color: #fff; }
+
+        /* --- VISTA DASHBOARD (APP) --- */
+        #app-layout { display: none; height: 100vh; display: flex; } /* Por JS se cambia a flex */
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px; background: #0a0a0a; border-right: 1px solid var(--border-light);
+            display: flex; flex-direction: column; padding: 40px 20px; z-index: 10;
+        }
+        .sidebar-brand { font-family: 'Cormorant Garamond'; font-size: 1.8rem; letter-spacing: 5px; color: #fff; text-align: center; margin-bottom: 50px; }
+        .nav-btn {
+            background: transparent; border: none; color: rgba(255,255,255,0.5); text-align: left;
+            padding: 15px 20px; border-radius: 8px; font-family: 'Montserrat'; font-size: 12px;
+            letter-spacing: 1px; cursor: pointer; transition: 0.3s; margin-bottom: 10px; width: 100%;
+        }
+        .nav-btn:hover, .nav-btn.active { background: rgba(212, 175, 55, 0.1); color: var(--color-dorado); }
+        
+        /* Contenido Principal */
+        .main-content {
+            flex: 1; overflow-y: auto; padding: 50px 80px;
+            background: radial-gradient(circle at top right, #111 0%, var(--bg-dark) 100%);
+        }
+        .header-top { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px; border-bottom: 1px solid var(--border-light); padding-bottom: 20px; }
+        .header-top h1 { font-family: 'Cormorant Garamond'; font-size: 3rem; font-weight: 300; }
+        
+        /* Tablas */
+        .admin-card {
+            background: var(--panel-bg); border: 1px solid var(--border-light);
+            border-radius: 15px; padding: 30px; backdrop-filter: blur(20px); margin-bottom: 30px;
+        }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        th { text-align: left; padding: 15px; border-bottom: 1px solid var(--border-light); color: var(--color-dorado); font-weight: 500; letter-spacing: 1px; text-transform: uppercase; font-size: 10px; }
+        td { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); color: #ccc; }
+        .estado-pendiente { color: #f39c12; background: rgba(243, 156, 18, 0.1); padding: 5px 10px; border-radius: 20px; font-size: 10px; }
+        .estado-contactado { color: #27ae60; background: rgba(39, 174, 96, 0.1); padding: 5px 10px; border-radius: 20px; font-size: 10px; }
+
+        /* Formulario Grid */
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
+        .full-width { grid-column: 1 / -1; }
+        label { font-size: 10px; color: #aaa; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; display: block; }
+        
+        .upload-zone {
+            border: 1px dashed rgba(212, 175, 55, 0.5); border-radius: 8px; padding: 30px;
+            text-align: center; color: var(--color-dorado); cursor: pointer; transition: 0.3s; background: rgba(212, 175, 55, 0.02);
+        }
+        .upload-zone:hover { background: rgba(212, 175, 55, 0.1); }
+
+        /* Control de Vistas */
+        .view-section { display: none; }
+        .view-section.active { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <div id="login-view">
+        <div class="login-card">
+            <h2>ATELIER ADMIN</h2>
+            <input type="email" id="email" class="input-lujo" placeholder="claudia@claudialejoyas.com" value="claudia@claudialejoyas.com">
+            <button onclick="sendMagicLink()" class="btn-lujo">Enviar Llave de Acceso</button>
+            <p id="login-message" style="color: var(--color-dorado); font-size: 12px; margin-top: 20px; letter-spacing: 1px;"></p>
+        </div>
+    </div>
+
+    <div id="app-layout" style="display: none;">
+        
+        <aside class="sidebar">
+            <div class="sidebar-brand">CLAUDIALE</div>
+            <button class="nav-btn active" onclick="switchView('consultas', this)">Consultas / Pedidos</button>
+            <button class="nav-btn" onclick="switchView('add-product', this)">Añadir Joya</button>
+            <button class="nav-btn" style="margin-top: auto; color: #e74c3c;" onclick="logout()">Cerrar Sesión</button>
+        </aside>
+
+        <main class="main-content">
+            
+            <div class="header-top">
+                <h1 id="view-title">Bandeja de Entrada</h1>
+                <p style="color: #aaa; font-size: 12px; letter-spacing: 2px;">PANEL DE CONTROL EN TIEMPO REAL</p>
+            </div>
+
+            <div id="view-consultas" class="view-section active">
+                <div class="admin-card">
+                    <table>
+                        <thead>
+                            <tr><th>Fecha</th><th>Nombre</th><th>Email</th><th>Interés / Pedido</th><th>Estado</th></tr>
+                        </thead>
+                        <tbody id="inquiries-tbody">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="view-add-product" class="view-section">
+                <div class="admin-card" style="max-width: 800px;">
+                    <form id="product-form">
+                        <div class="form-grid">
+                            <div class="full-width">
+                                <label>Nombre de la Pieza</label>
+                                <input type="text" class="input-lujo" id="prod-name" placeholder="Ej. Anillo Eternidad Diamante" required>
+                            </div>
+                            <div>
+                                <label>Precio (USD)</label>
+                                <input type="number" class="input-lujo" id="prod-price" placeholder="2450.00" required>
+                            </div>
+                            <div>
+                                <label>Categoría</label>
+                                <select class="input-lujo" id="prod-category">
+                                    <option>Anillos</option>
+                                    <option>Collares</option>
+                                    <option>Pendientes</option>
+                                    <option>Relojes</option>
+                                </select>
+                            </div>
+                            <div class="full-width">
+                                <label>Descripción de los materiales</label>
+                                <textarea class="input-lujo" id="prod-desc" rows="3" placeholder="Oro 18k, corte princesa..."></textarea>
+                            </div>
+                            
+                            <div class="full-width">
+                                <label>Fotografía (URL de Storage de Supabase)</label>
+                                <input type="url" class="input-lujo" id="prod-img" placeholder="https://tu-proyecto.supabase.co/storage/v1/object/public/joyas/foto.jpg">
+                            </div>
+
+                            <div class="full-width">
+                                <label>Archivo 3D .GLB (Opcional - Para el Atelier)</label>
+                                <input type="url" class="input-lujo" id="prod-3d" placeholder="URL del modelo 3D">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-lujo" style="margin-top: 30px;">PUBLICAR EN BOUTIQUE</button>
+                    </form>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script type="module">
+        import { createClient } from 'https://esm.sh/@supabase/supabase-js';
+
+        // TUS CREDENCIALES DE SUPABASE
+        const supabaseUrl = 'https://tu-proyecto.supabase.co';
+        const supabaseAnonKey = 'tu-anon-key';
+        const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+        // --- 1. LÓGICA DE AUTENTICACIÓN ---
+        window.sendMagicLink = async () => {
+            const email = document.getElementById('email').value;
+            const messageEl = document.getElementById('login-message');
+            messageEl.innerText = 'Enviando credenciales...';
+            
+            const { error } = await supabase.auth.signInWithOtp({ email });
+            if (error) {
+                messageEl.style.color = '#e74c3c';
+                messageEl.innerText = 'Error: ' + error.message;
+            } else {
+                messageEl.style.color = 'var(--color-dorado)';
+                messageEl.innerText = '¡Revisa tu correo para entrar al Atelier!';
+            }
+        };
+
+        async function checkUser() {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user) {
+                // Mostrar App, Ocultar Login
+                document.getElementById('login-view').style.display = 'none';
+                document.getElementById('app-layout').style.display = 'flex';
+                
+                loadInquiries();
+                
+                // Suscribirse a nuevas consultas (Tu código)
+                supabase
+                    .channel('inquiries-channel')
+                    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'inquiries' }, payload => {
+                        addInquiryRow(payload.new);
+                    })
+                    .subscribe();
+            }
+        }
+
+        window.logout = async () => {
+            await supabase.auth.signOut();
+            location.reload();
+        };
+
+        // --- 2. LÓGICA DE CONSULTAS (Lectura) ---
+        async function loadInquiries() {
+            const { data } = await supabase.from('inquiries').select('*').order('created_at', { ascending: false });
+            const tbody = document.getElementById('inquiries-tbody');
+            tbody.innerHTML = '';
+            if(data) data.forEach(addInquiryRow);
+        }
+
+        function addInquiryRow(inq) {
+            const tbody = document.getElementById('inquiries-tbody');
+            const row = document.createElement('tr');
+            
+            // Lógica para el badge visual de estado
+            const statusClass = (inq.status === 'contactado') ? 'estado-contactado' : 'estado-pendiente';
+            const statusText = inq.status ? inq.status.toUpperCase() : 'PENDIENTE';
+
+            row.innerHTML = `
+                <td style="color: #888;">${new Date(inq.created_at).toLocaleDateString()}</td>
+                <td style="font-weight: 600; color: #fff;">${inq.name}</td>
+                <td>${inq.email}</td>
+                <td>${inq.interest_type || 'General'}</td>
+                <td><span class="${statusClass}">${statusText}</span></td>
+            `;
+            tbody.appendChild(row);
+        }
+
+        // --- 3. LÓGICA DE AÑADIR PRODUCTO (Para ti como Fullstack) ---
+        document.getElementById('product-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const btn = e.target.querySelector('button');
+            const originalText = btn.innerText;
+            btn.innerText = "SUBIENDO A SUPABASE...";
+
+            // Recolectar datos
+            const newProduct = {
+                name: document.getElementById('prod-name').value,
+                price: parseFloat(document.getElementById('prod-price').value),
+                category: document.getElementById('prod-category').value,
+                description: document.getElementById('prod-desc').value,
+                image_url: document.getElementById('prod-img').value,
+                model_3d_url: document.getElementById('prod-3d').value
+            };
+
+            // INSERCIÓN A SUPABASE (Asegúrate de tener la tabla 'products')
+            /*
+            const { data, error } = await supabase.from('products').insert([newProduct]);
+            if(error) {
+                alert("Error al subir: " + error.message);
+            } else {
+                alert("¡Joya añadida a la Boutique exitosamente!");
+                e.target.reset(); // Limpiar formulario
+            }
+            */
+
+            // Simulación visual mientras conectas tu base de datos:
+            setTimeout(() => {
+                alert("Lógica de Supabase lista para descomentar. Producto preparado: " + newProduct.name);
+                btn.innerText = originalText;
+                e.target.reset();
+            }, 1000);
+        });
+
+        // --- NAVEGACIÓN DEL PANEL (UI) ---
+        window.switchView = (viewId, btnElement) => {
+            // Cambiar botones
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            btnElement.classList.add('active');
+
+            // Cambiar titulo
+            document.getElementById('view-title').innerText = (viewId === 'consultas') ? "Bandeja de Entrada" : "Añadir Nueva Joya";
+
+            // Cambiar vistas
+            document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
+            document.getElementById('view-' + viewId).classList.add('active');
+        };
+
+        // Iniciar
+        checkUser();
+    </script>
+</body>
+</html>

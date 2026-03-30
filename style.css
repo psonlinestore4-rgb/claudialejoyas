@@ -1,0 +1,240 @@
+/* style.css */
+:root {
+    --color-fondo: #221d1a;
+    --color-musgo: #4c6357;
+    --color-ciruela: #4b3048;
+    --color-lila: #7b6484;
+    --color-teja: #964e3e;
+    --color-terracota: #af4b45;
+    --color-arena: #b4a8a4;
+    --color-dorado: #d4af37;
+
+    --fuente-principal: 'Montserrat', sans-serif;
+    --fuente-titulos: 'Cormorant Garamond', serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* OCULTAR CURSOR ORIGINAL PARA EL CUSTOM */
+html, body, a, button {
+    cursor: none !important;
+}
+
+body {
+    background-color: var(--color-fondo);
+    font-family: var(--fuente-principal);
+    color: var(--color-arena);
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+}
+
+/* --- CURSOR PERSONALIZADO (ESTILO APPLE) --- */
+#cursor-custom {
+    position: fixed;
+    width: 35px;
+    height: 35px;
+    border: 1px solid var(--color-dorado);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.15s ease-out, width 0.3s, height 0.3s, background 0.3s;
+    transform: translate(-50%, -50%);
+}
+
+#cursor-dot {
+    position: fixed;
+    width: 5px;
+    height: 5px;
+    background: var(--color-dorado);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+}
+
+.cursor-hover {
+    width: 65px !important;
+    height: 65px !important;
+    background: rgba(212, 175, 55, 0.1);
+    border: 0.5px solid var(--color-dorado) !important;
+}
+
+/* --- SCROLLBAR ELEGANTE (MANTENIDO) --- */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--color-fondo); }
+::-webkit-scrollbar-thumb { background: var(--color-dorado); border-radius: 10px; }
+
+/* --- VISOR 3D (Se mantiene para la tienda) --- */
+#canvas-container {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* --- ANIMACIONES REVEAL (ESTILO APPLE) --- */
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 1.2s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+#contenedor-scroll { position: relative; z-index: 10; }
+
+.espacio {
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    position: relative;
+    pointer-events: none;
+}
+
+/* --- HERO ESTILO JESKO (INTEGRADO) --- */
+.hero {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.video-background {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    z-index: -1;
+    filter: brightness(0.5); 
+}
+
+.hero-title {
+    font-family: var(--fuente-titulos);
+    font-size: clamp(3rem, 10vw, 8rem);
+    font-weight: 300;
+    letter-spacing: 15px; 
+    color: white;
+    line-height: 1.1;
+    text-transform: uppercase;
+}
+
+.hero-subtitle {
+    font-size: 14px;
+    letter-spacing: 6px;
+    margin-top: 1.5rem;
+    text-transform: uppercase;
+    font-weight: 300;
+    color: rgba(255,255,255,0.8);
+}
+
+.btn-hero {
+    display: inline-block;
+    margin-top: 40px;
+    padding: 18px 45px;
+    border: 1px solid rgba(255,255,255,0.4);
+    color: white;
+    text-decoration: none;
+    font-size: 11px;
+    letter-spacing: 4px;
+    transition: all 0.4s ease;
+    background: transparent;
+    text-transform: uppercase;
+}
+.btn-hero:hover { background: white; color: black; }
+
+/* --- NAVBAR CON EFECTO ROLLING (REDISEÑADO ESTILO JESKO) --- */
+.navbar {
+    position: fixed;
+    top: 0; left: 0; width: 100%;
+    z-index: 1000;
+    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: auto;
+    background: transparent;
+}
+.navbar.scrolled {
+    background: rgba(10, 10, 10, 0.95);
+    backdrop-filter: blur(20px);
+}
+.navbar-logo {
+    font-family: var(--fuente-titulos);
+    color: white;
+    text-decoration: none;
+    font-size: 1.8rem;
+    letter-spacing: 8px;
+    font-weight: 300;
+    text-transform: uppercase;
+}
+.navbar-menu { display: flex; gap: 50px; list-style: none; }
+
+.menu-link { text-decoration: none; overflow: hidden; display: block; height: 14px; }
+.menu-link-inner { display: flex; flex-direction: column; transition: transform 0.5s cubic-bezier(0.645, 0.045, 0.355, 1); }
+.menu-link-text {
+    display: block; color: white; font-size: 0.75rem; letter-spacing: 3px;
+    text-transform: uppercase; line-height: 14px; transition: opacity 0.3s;
+}
+.menu-link:hover .menu-link-inner { transform: translateY(-14px); }
+
+/* --- FILOSOFÍA Y EFECTO CRISTAL (MANTENIDO) --- */
+.filosofia { align-items: center; background: black; }
+.tarjeta-info, .configurador-contenido {
+    background: rgba(34, 29, 26, 0.4);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(212, 175, 55, 0.15);
+}
+
+.tarjeta-info h2 {
+    font-family: var(--fuente-titulos); font-size: 3rem;
+    color: white; margin-bottom: 2rem; font-weight: 300; letter-spacing: 5px;
+}
+
+/* --- ABOUT US / EQUIPO --- */
+.equipo-section {
+    position: relative; height: 100vh; width: 100%;
+    display: flex; align-items: center; overflow: hidden;
+}
+.video-integrante {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    object-fit: cover; z-index: -1; filter: grayscale(30%) brightness(0.35);
+}
+.bio-container { padding: 0 8%; max-width: 800px; z-index: 2; }
+.bio-nombre {
+    font-family: var(--fuente-titulos); font-size: clamp(2.5rem, 7vw, 5rem);
+    color: white; letter-spacing: 12px; text-transform: uppercase;
+}
+.bio-texto {
+    line-height: 2.2; color: var(--color-arena); font-size: 1rem;
+    border-left: 1px solid var(--color-dorado); padding-left: 30px;
+}
+
+/* --- CONFIGURADOR (MANTENIDO) --- */
+.panel-flotante { position: absolute; bottom: 40px; right: 40px; width: 350px; }
+.btn-comprar {
+    width: 100%; padding: 18px; background: white; color: black;
+    border: none; cursor: pointer; letter-spacing: 3px; font-size: 11px;
+    font-weight: bold; text-transform: uppercase; transition: 0.4s;
+}
+.btn-comprar:hover { background: var(--color-dorado); color: white; }
+
+/* --- CONTACTO --- */
+.contacto { justify-content: center; align-items: center; background: #0a0a0a; }
+.contacto-contenedor { width: 500px; text-align: center; }
+.formulario-contacto input {
+    width: 100%; background: transparent; border: none;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+    color: white; padding: 15px 0; margin-bottom: 30px; outline: none;
+}
+
+.grid-colecciones {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px; padding: 0 50px;
+}

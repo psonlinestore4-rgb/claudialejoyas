@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boutique | Claudiale Joyas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Montserrat:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-dorado: #d4af37;
+            --bg-dark: #050505;
+        }
+
+        body {
+            background: var(--bg-dark);
+            color: #fff;
+            overflow-x: hidden;
+            margin: 0;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        /* --- CURSOR PERSONALIZADO (mejorado con efectos de index) --- */
+        #cursor-custom {
+            position: fixed;
+            width: 35px;
+            height: 35px;
+            border: 1px solid var(--color-dorado);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.15s ease-out, width 0.3s, height 0.3s, background 0.3s;
+            transform: translate(-50%, -50%);
+            top: 0;
+            left: 0;
+        }
+
+        #cursor-dot {
+            position: fixed;
+            width: 5px;
+            height: 5px;
+            background: var(--color-dorado);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            top: 0;
+            left: 0;
+        }
+
+        .cursor-hover {
+            width: 65px !important;
+            height: 65px !important;
+            background: rgba(212, 175, 55, 0.1);
+            border: 0.5px solid var(--color-dorado) !important;
+        }
+
+        html, body, a, button, select, input, .card-light, .float-card, .modal-close, .cart-close, .cart-overlay {
+            cursor: none !important;
+        }
+
+        /* --- NAVBAR (igual que antes) --- */
+        .navbar {
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(5, 5, 5, 0.95);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 15px 0;
+        }
+
+        .navbar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 0 6vw;
+            max-width: 1800px;
+            margin: 0 auto;
+            box-sizing: border-box;
+        }
+
+        .navbar-side {
+            flex: 1;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-left {
+            justify-content: flex-start;
+            gap: 30px;
+        }
+
+        .navbar-center {
+            flex: 0 0 auto;
+            display: flex;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .navbar-right {
+            justify-content: flex-end;
+            gap: 30px;
+        }
+
+        .nav-link {
+            color: #fff;
+            text-decoration: none;
+            font-family: 'Montserrat';
+            font-size: 11px;
+            letter-spacing: 2px;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+
+        .nav-link:hover {
+            color: var(--color-dorado);
+        }
+
+        /* --- HERO (sin cambios) --- */
+        .hero-store {
+            position: relative;
+            height: 90vh;
+            display: flex;
+            align-items: center;
+            padding: 0 6vw;
+            background: url('https://images.pexels.com/photos/177332/pexels-photo-177332.jpeg?auto=compress&cs=tinysrgb&w=1920') center/cover no-repeat;
+            margin-bottom: 150px;
+        }
+
+        .hero-store::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to right, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.2) 100%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 600px;
+        }
+
+        .hero-title {
+            font-family: 'Cormorant Garamond';
+            font-size: 5rem;
+            font-weight: 400;
+            line-height: 1.1;
+            margin-bottom: 20px;
+        }
+
+        .hero-subtitle {
+            font-size: 12px;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 40px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+        }
+
+        .btn-white {
+            background: #fff;
+            color: #000;
+            padding: 12px 30px;
+            border-radius: 30px;
+            border: none;
+            font-weight: 600;
+            font-size: 11px;
+            letter-spacing: 1px;
+            transition: 0.3s;
+            cursor: none;
+        }
+
+        .btn-white:hover {
+            background: var(--color-dorado);
+            color: #fff;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #fff;
+            padding: 12px 30px;
+            border-radius: 30px;
+            border: 1px solid #fff;
+            font-weight: 600;
+            font-size: 11px;
+            letter-spacing: 1px;
+            transition: 0.3s;
+            cursor: none;
+        }
+
+        .btn-outline:hover {
+            background: #fff;
+            color: #000;
+        }
+
+        /* --- TARJETAS CATEGORÍAS FLOTANTES (sin cambios) --- */
+        .floating-categories {
+            position: absolute;
+            bottom: -80px;
+            left: 6vw;
+            right: 6vw;
+            display: flex;
+            gap: 20px;
+            z-index: 10;
+        }
+
+        .float-card {
+            background: #fff;
+            border-radius: 15px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            transition: 0.3s;
+            color: #000;
+            text-decoration: none;
+            cursor: none;
+        }
+
+        .float-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .float-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .float-info h4 {
+            font-family: 'Cormorant Garamond';
+            font-size: 1.5rem;
+            margin: 0 0 5px 0;
+        }
+
+        .float-info p {
+            font-size: 9px;
+            color: #666;
+            font-weight: 600;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* --- SECCIÓN DESTACADA (sin cambios) --- */
+        .featured-section {
+            display: flex;
+            padding: 0 6vw 100px 6vw;
+            max-width: 1800px;
+            margin: 0 auto;
+            gap: 5vw;
+            align-items: center;
+        }
+
+        .featured-text {
+            flex: 1;
+        }
+
+        .featured-text h2 {
+            font-family: 'Cormorant Garamond';
+            font-size: 3.5rem;
+            font-weight: 400;
+            margin-bottom: 20px;
+            line-height: 1.1;
+        }
+
+        .featured-text p {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+
+        .featured-carousel {
+            flex: 1.5;
+            display: flex;
+            gap: 20px;
+        }
+
+        /* --- TARJETA DE PRODUCTO BLANCA (sin cambios) --- */
+        .card-light {
+            background: #fff;
+            border-radius: 15px;
+            padding: 15px;
+            color: #000;
+            flex: 1;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            transition: 0.3s;
+            position: relative;
+            cursor: none;
+        }
+
+        .card-light:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(212, 175, 55, 0.2);
+        }
+
+        .badge-sale {
+            position: absolute;
+            top: 25px;
+            left: 25px;
+            background: #000;
+            color: #fff;
+            font-size: 9px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            z-index: 2;
+        }
+
+        .icon-heart {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            z-index: 2;
+            color: #aaa;
+            transition: 0.3s;
+            cursor: none;
+        }
+
+        .icon-heart:hover {
+            color: #e74c3c;
+        }
+
+        .card-light img {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            background: #f4f4f4;
+        }
+
+        .card-light-title {
+            font-family: 'Montserrat';
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .card-light-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+        }
+
+        .card-light-price {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .card-light-price span {
+            text-decoration: line-through;
+            color: #aaa;
+            font-size: 10px;
+            margin-left: 5px;
+            font-weight: 400;
+        }
+
+        .btn-cart-dark {
+            background: #000;
+            color: #fff;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            font-size: 10px;
+            font-family: 'Montserrat';
+            font-weight: 600;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: none;
+        }
+
+        .btn-cart-dark:hover {
+            background: var(--color-dorado);
+        }
+
+        /* --- LAYOUT PRINCIPAL (sin cambios) --- */
+        .store-layout {
+            display: flex;
+            padding: 50px 6vw 100px 6vw;
+            max-width: 1800px;
+            margin: 0 auto;
+            gap: 4vw;
+            align-items: flex-start;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .store-sidebar {
+            width: 250px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 100px;
+        }
+
+        .filter-group {
+            margin-bottom: 40px;
+        }
+
+        .filter-title {
+            font-size: 11px;
+            letter-spacing: 3px;
+            color: var(--color-dorado);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .filter-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .filter-list label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+            transition: 0.3s;
+            cursor: none;
+        }
+
+        .filter-list label:hover {
+            color: #fff;
+        }
+
+        .filter-list input[type="checkbox"] {
+            appearance: none;
+            width: 14px;
+            height: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            display: grid;
+            place-content: center;
+            cursor: none;
+        }
+
+        .filter-list input[type="checkbox"]::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            transform: scale(0);
+            transition: 120ms transform ease-in-out;
+            box-shadow: inset 1em 1em var(--color-dorado);
+            transform-origin: bottom left;
+            clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+        }
+
+        .filter-list input[type="checkbox"]:checked::before {
+            transform: scale(1);
+        }
+
+        .filter-list input[type="checkbox"]:checked {
+            border-color: var(--color-dorado);
+        }
+
+        .store-main {
+            flex: 1;
+        }
+
+        .store-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 40px;
+        }
+
+        .store-header h1 {
+            font-family: 'Cormorant Garamond';
+            font-size: 3rem;
+            font-weight: 400;
+            margin: 0;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        /* --- MODAL QUICK VIEW (sin cambios) --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: #fff;
+            color: #000;
+            border-radius: 20px;
+            width: 95%;
+            max-width: 1200px;
+            height: 85vh;
+            max-height: 800px;
+            display: flex;
+            overflow: hidden;
+            position: relative;
+            transform: scale(0.9);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            background: rgba(0, 0, 0, 0.05);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 24px;
+            color: #000;
+            z-index: 10;
+            cursor: none;
+            transition: 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-close:hover {
+            background: #000;
+            color: var(--color-dorado);
+            transform: rotate(90deg);
+        }
+
+        .modal-image-col {
+            flex: 1.5;
+            background: #f4f4f4;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .modal-image-col img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .modal-info-col {
+            flex: 1;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow-y: auto;
+        }
+
+        .modal-category {
+            font-size: 10px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+        }
+
+        .modal-title {
+            font-family: 'Cormorant Garamond';
+            font-size: 3.5rem;
+            font-weight: 300;
+            margin: 0 0 15px 0;
+            line-height: 1.1;
+        }
+
+        .modal-price {
+            font-family: 'Montserrat';
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--color-dorado);
+            margin-bottom: 30px;
+        }
+
+        .modal-desc {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 30px;
+            font-family: 'Montserrat';
+        }
+
+        .modal-options label {
+            font-size: 10px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: block;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .modal-select {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: 'Montserrat';
+            font-size: 12px;
+            margin-bottom: 20px;
+            cursor: none;
+            outline: none;
+            background: #fdfdfd;
+        }
+
+        .modal-select:focus {
+            border-color: #000;
+        }
+
+        .btn-modal-add {
+            background: #000;
+            color: #fff;
+            border: none;
+            padding: 20px;
+            width: 100%;
+            border-radius: 8px;
+            font-family: 'Montserrat';
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: 0.3s;
+            cursor: none;
+            margin-top: 10px;
+        }
+
+        .btn-modal-add:hover {
+            background: var(--color-dorado);
+        }
+
+        /* --- SIDEBAR CARRITO (sin cambios) --- */
+        .cart-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.3s;
+        }
+
+        .cart-overlay.active {
+            opacity: 1;
+            visibility: visible;
+            cursor: none;
+        }
+
+        .cart-drawer {
+            position: fixed;
+            top: 0;
+            right: -500px;
+            width: 100%;
+            max-width: 450px;
+            height: 100vh;
+            background: #050505;
+            z-index: 2001;
+            transition: right 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            border-left: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cart-drawer.active {
+            right: 0;
+        }
+
+        .cart-header {
+            padding: 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cart-header h2 {
+            font-family: 'Cormorant Garamond';
+            font-size: 2rem;
+            font-weight: 300;
+            margin: 0;
+            color: #fff;
+        }
+
+        .cart-close {
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 28px;
+            cursor: none;
+            transition: 0.3s;
+            line-height: 1;
+        }
+
+        .cart-close:hover {
+            color: var(--color-dorado);
+            transform: rotate(90deg);
+        }
+
+        .cart-body {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .cart-empty {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.4);
+            font-family: 'Montserrat';
+            font-size: 12px;
+            margin-top: 50px;
+        }
+
+        .cart-footer {
+            padding: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            background: #000;
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            font-family: 'Montserrat';
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        .btn-checkout {
+            width: 100%;
+            background: #fff;
+            color: #000;
+            border: none;
+            padding: 18px;
+            border-radius: 8px;
+            font-family: 'Montserrat';
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: none;
+            transition: 0.3s;
+            text-align: center;
+            display: block;
+            text-decoration: none;
+        }
+
+        .btn-checkout:hover {
+            background: var(--color-dorado);
+            color: #fff;
+        }
+
+        /* --- ANIMACIONES REVEAL (desde index) --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1s ease, transform 1s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="cursor-custom"></div>
+    <div id="cursor-dot"></div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-side navbar-left">
+                <a href="index.html" class="nav-link">Inicio</a>
+                <a href="aboutus.html" class="nav-link">Conocenos</a>
+            </div>
+
+            <div class="navbar-center">
+                <a href="index.html" style="color:#fff; text-decoration:none; font-family:'Cormorant Garamond'; font-size:2.2rem; letter-spacing:10px; font-weight: 300;">CLAUDIALE</a>
+            </div>
+
+            <div class="navbar-side navbar-right">
+                <a href="#" class="nav-link" id="cart-trigger" style="display:flex; align-items:center; gap:10px;" onclick="openCart(event)">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <path d="M16 10a4 4 0 0 1-8 0"></path>
+                    </svg>
+                    <span id="cart-count" style="background: var(--color-dorado); color: #000; min-width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-weight: 700; font-size: 9px;">0</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO (se mantiene igual, pero se le añade clase reveal a elementos) -->
+    <header class="hero-store">
+        <div class="hero-content">
+            <h1 class="hero-title reveal">Descubre tu<br>Brillo</h1>
+            <p class="hero-subtitle reveal">Bienvenida a la temporada de elegancia. Explora nuestra encantadora colección de esmeraldas, diamantes y oro forjados para perdurar.</p>
+            <div class="hero-buttons reveal">
+                <button class="btn-white" onclick="window.location.href='customize.html'">ATELIER 3D</button>
+                <button class="btn-outline">EXPLORAR</button>
+            </div>
+        </div>
+
+        <div class="floating-categories">
+            <a href="#" class="float-card reveal">
+                <div class="float-info">
+                    <p>Categoría</p>
+                    <h4>Anillos</h4>
+                    <p>Ver Productos &rarr;</p>
+                </div>
+                <img src="https://images.pexels.com/photos/1458867/pexels-photo-1458867.jpeg?auto=compress&cs=tinysrgb&w=200" class="float-img" style="margin-left: auto;">
+            </a>
+            <a href="#" class="float-card reveal">
+                <div class="float-info">
+                    <p>Categoría</p>
+                    <h4>Alianzas</h4>
+                    <p>Ver Productos &rarr;</p>
+                </div>
+                <img src="https://images.pexels.com/photos/265906/pexels-photo-265906.jpeg?auto=compress&cs=tinysrgb&w=200" class="float-img" style="margin-left: auto;">
+            </a>
+            <a href="#" class="float-card reveal">
+                <div class="float-info">
+                    <p>Categoría</p>
+                    <h4>Pendientes</h4>
+                    <p>Ver Productos &rarr;</p>
+                </div>
+                <img src="https://images.pexels.com/photos/837140/pexels-photo-837140.jpeg?auto=compress&cs=tinysrgb&w=200" class="float-img" style="margin-left: auto;">
+            </a>
+        </div>
+    </header>
+
+    <!-- SECCIÓN DESTACADA (con reveal) -->
+    <section class="featured-section">
+        <div class="featured-text">
+            <h2 class="reveal">Diamantes &<br>Anillos de Compromiso</h2>
+            <p class="reveal">Experimenta la belleza de la joyería de diamantes y encuentra la pieza perfecta para una ocasión especial. Descubre el diamante perfecto para cualquier aniversario o regalo eterno.</p>
+            <button class="btn-white reveal" style="background: #333; color: #fff;">VER COLECCIÓN</button>
+        </div>
+
+        <div class="featured-carousel">
+            <div class="card-light reveal" onclick="openModal('Anillo Solitario Real', '$999.00', 'Un espectacular solitario montado en oro blanco de 18 quilates, coronado por un diamante puro de corte brillante que captura la luz desde todos los ángulos.', 'https://images.pexels.com/photos/177332/pexels-photo-177332.jpeg?auto=compress&cs=tinysrgb&w=800')">
+                <span class="badge-sale">SALE</span>
+                <svg class="icon-heart" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                </svg>
+                <img src="https://images.pexels.com/photos/177332/pexels-photo-177332.jpeg?auto=compress&cs=tinysrgb&w=400">
+                <p style="font-size: 10px; color: #888; margin: 0 0 5px 0;">Anillos</p>
+                <h3 class="card-light-title">Anillo Solitario Real</h3>
+                <div class="card-light-bottom">
+                    <div class="card-light-price">$999 <span>$1299</span></div>
+                    <button class="btn-cart-dark">Añadir</button>
+                </div>
+            </div>
+
+            <div class="card-light reveal" onclick="openModal('Alianza Diamantes', '$1,399.00', 'Elegante alianza recubierta de diamantes micro-pavé en toda su circunferencia, ideal para sellar un compromiso eterno.', 'https://images.pexels.com/photos/265906/pexels-photo-265906.jpeg?auto=compress&cs=tinysrgb&w=800')">
+                <span class="badge-sale">NUEVO</span>
+                <svg class="icon-heart" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                </svg>
+                <img src="https://images.pexels.com/photos/265906/pexels-photo-265906.jpeg?auto=compress&cs=tinysrgb&w=400">
+                <p style="font-size: 10px; color: #888; margin: 0 0 5px 0;">Alianzas</p>
+                <h3 class="card-light-title">Alianza Diamantes</h3>
+                <div class="card-light-bottom">
+                    <div class="card-light-price">$1399</div>
+                    <button class="btn-cart-dark">Añadir</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- LAYOUT PRINCIPAL DE TIENDA (con reveal en productos) -->
+    <main class="store-layout">
+
+        <aside class="store-sidebar">
+            <div class="filter-group reveal">
+                <h3 class="filter-title">Categorías</h3>
+                <ul class="filter-list">
+                    <li><label><input type="checkbox" checked> Todos</label></li>
+                    <li><label><input type="checkbox"> Anillos</label></li>
+                    <li><label><input type="checkbox"> Collares</label></li>
+                    <li><label><input type="checkbox"> Pendientes</label></li>
+                </ul>
+            </div>
+            <div class="filter-group reveal">
+                <h3 class="filter-title">Material</h3>
+                <ul class="filter-list">
+                    <li><label><input type="checkbox"> Oro 18k</label></li>
+                    <li><label><input type="checkbox"> Oro Blanco</label></li>
+                    <li><label><input type="checkbox"> Platino</label></li>
+                </ul>
+            </div>
+            <div class="filter-group reveal">
+                <h3 class="filter-title">Precio</h3>
+                <ul class="filter-list">
+                    <li><label><input type="checkbox"> Menos de $1,000</label></li>
+                    <li><label><input type="checkbox"> $1,000 - $3,000</label></li>
+                    <li><label><input type="checkbox"> Más de $3,000</label></li>
+                </ul>
+            </div>
+        </aside>
+
+        <section class="store-main">
+            <div class="store-header reveal">
+                <div>
+                    <p style="color: var(--color-dorado); font-size: 11px; letter-spacing: 3px; margin-bottom: 5px; text-transform: uppercase;">Colección Completa</p>
+                    <h1>Nuestras Joyas</h1>
+                </div>
+                <select style="background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 10px 15px; font-family: 'Montserrat'; font-size: 11px; border-radius: 5px; cursor: none;">
+                    <option>Destacados</option>
+                    <option>Precio: Menor a Mayor</option>
+                    <option>Precio: Mayor a Menor</option>
+                </select>
+            </div>
+
+            <div class="products-grid" id="supabase-products">
+                <div class="card-light reveal" onclick="openModal('Anillo Zafiro', '$799.00', 'Un zafiro azul profundo rodeado de detalles en oro amarillo. La elegancia hecha anillo.', 'https://images.pexels.com/photos/1458867/pexels-photo-1458867.jpeg?auto=compress&cs=tinysrgb&w=800')">
+                    <span class="badge-sale">SALE</span>
+                    <svg class="icon-heart" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                    </svg>
+                    <img src="https://images.pexels.com/photos/1458867/pexels-photo-1458867.jpeg?auto=compress&cs=tinysrgb&w=400">
+                    <p style="font-size: 10px; color: #888; margin: 0 0 5px 0;">Anillos</p>
+                    <h3 class="card-light-title">Anillo Zafiro</h3>
+                    <div class="card-light-bottom">
+                        <div class="card-light-price">$799 <span>$899</span></div>
+                        <button class="btn-cart-dark">Añadir</button>
+                    </div>
+                </div>
+
+                <div class="card-light reveal" onclick="openModal('Pendientes Esmeralda', '$1,200.00', 'Delicados pendientes colgantes con esmeraldas colombianas genuinas. Diseñados para noches inolvidables.', 'https://images.pexels.com/photos/837140/pexels-photo-837140.jpeg?auto=compress&cs=tinysrgb&w=800')">
+                    <svg class="icon-heart" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                    </svg>
+                    <img src="https://images.pexels.com/photos/837140/pexels-photo-837140.jpeg?auto=compress&cs=tinysrgb&w=400">
+                    <p style="font-size: 10px; color: #888; margin: 0 0 5px 0;">Pendientes</p>
+                    <h3 class="card-light-title">Pendientes Esmeralda</h3>
+                    <div class="card-light-bottom">
+                        <div class="card-light-price">$1200</div>
+                        <button class="btn-cart-dark">Añadir</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- MODAL QUICK VIEW -->
+    <div class="modal-overlay" id="productModal" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeModal(event)">&times;</button>
+
+            <div class="modal-image-col">
+                <img id="modalImage" src="" alt="Joya">
+            </div>
+
+            <div class="modal-info-col">
+                <p class="modal-category">JOYERÍA EXCLUSIVA</p>
+                <h2 class="modal-title" id="modalTitle">Título del Producto</h2>
+                <div class="modal-price" id="modalPrice">$0.00</div>
+
+                <p class="modal-desc" id="modalDesc"></p>
+
+                <div class="modal-options">
+                    <label>Seleccionar Talla</label>
+                    <select class="modal-select">
+                        <option>Talla 6</option>
+                        <option>Talla 7 (Promedio)</option>
+                        <option>Talla 8</option>
+                    </select>
+
+                    <label>Tipo de Oro</label>
+                    <select class="modal-select">
+                        <option>Oro Blanco 18k</option>
+                        <option>Oro Amarillo 18k</option>
+                        <option>Oro Rosa 18k</option>
+                    </select>
+                </div>
+
+                <button class="btn-modal-add" onclick="openCart(event); closeModal(event);">
+                    AÑADIR A LA BOLSA
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CARRITO LATERAL -->
+    <div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+    <div class="cart-drawer" id="cartDrawer">
+        <div class="cart-header">
+            <h2>Tu Bolsa</h2>
+            <button class="cart-close" onclick="closeCart()">&times;</button>
+        </div>
+
+        <div class="cart-body" id="cartBody">
+            <div class="cart-empty">Tu bolsa de compras está vacía.</div>
+        </div>
+
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total</span>
+                <span>$0.00</span>
+            </div>
+            <a href="checkout.html" class="btn-checkout">PROCEDER AL PAGO</a>
+        </div>
+    </div>
+
+    <script>
+        // CURSOR (mejorado)
+        const cursor = document.getElementById('cursor-custom');
+        const dot = document.getElementById('cursor-dot');
+        document.addEventListener('mousemove', (e) => {
+            requestAnimationFrame(() => {
+                dot.style.left = e.clientX + 'px';
+                dot.style.top = e.clientY + 'px';
+                setTimeout(() => {
+                    cursor.style.left = e.clientX + 'px';
+                    cursor.style.top = e.clientY + 'px';
+                }, 40);
+            });
+        });
+
+        // CARRITO
+        window.openCart = function (e) {
+            if (e) e.preventDefault();
+            document.getElementById('cartOverlay').classList.add('active');
+            document.getElementById('cartDrawer').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        };
+
+        window.closeCart = function () {
+            document.getElementById('cartOverlay').classList.remove('active');
+            document.getElementById('cartDrawer').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        };
+
+        // MODAL
+        const modal = document.getElementById('productModal');
+
+        window.openModal = function (title, price, desc, imgSrc) {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalPrice').innerText = price;
+            const descEl = document.getElementById('modalDesc');
+            if (desc && desc.trim() !== '') {
+                descEl.innerText = desc;
+                descEl.style.display = 'block';
+            } else {
+                descEl.style.display = 'none';
+            }
+            document.getElementById('modalImage').src = imgSrc;
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        };
+
+        window.closeModal = function (e) {
+            if (e) e.stopPropagation();
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        };
+
+        // REVEAL (nuevo desde index)
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('active');
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // HOVER CURSOR (mejorado con todos los elementos interactivos)
+        function updateHoverListeners() {
+            const hoverElements = document.querySelectorAll(
+                'a, button, input, select, .card-light, .float-card, .modal-close, .cart-close, .cart-overlay'
+            );
+            hoverElements.forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('cursor-hover'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('cursor-hover'));
+            });
+        }
+        updateHoverListeners();
+    </script>
+</body>
+</html>
