@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claudiale Joyas | Joyería</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Fuentes elegantes -->
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Montserrat:wght@200;300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- NAVBAR (fijo) -->
+    <nav id="navbar" class="navbar">
+        <div class="navbar-container">
+            <a href="/" class="navbar-logo">CLAUDIALE</a>
+            <ul class="navbar-menu">
+                <li><a href="#filosofia">Filosofía</a></li>
+                <li><a href="#colecciones">Colecciones</a></li>
+                <li><a href="#configurador">Configurador</a></li>
+                <li><a href="#contacto">Contacto</a></li>
+            </ul>
+            <button class="navbar-toggle" id="navbar-toggle" aria-label="Menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- VISOR 3D (siempre fijo al fondo) -->
+    <div id="canvas-container"></div>
+
+    <!-- CONTENIDO CON SCROLL -->
+    <main id="contenedor-scroll">
+
+        <!-- SECCIÓN HERO (sin puerta) -->
+        <section class="espacio hero" id="hero">
+            <div class="hero-contenido">
+                <h1 class="hero-title">
+                    <span class="hero-title-line">EL ARTE</span>
+                    <span class="hero-title-line">DEL BRILLO</span>
+                </h1>
+                <p class="hero-subtitle">Claudiale Joyas · Atelier</p>
+                <a href="#configurador" class="btn-hero">Inicia tu viaje</a>
+            </div>
+        </section>
+
+        <!-- SECCIÓN FILOSOFÍA -->
+        <section class="espacio filosofia" id="filosofia">
+            <div class="filosofia-contenedor">
+                <div class="tarjeta-info">
+                    <h2>LA CHISPA DE LA CREACIÓN</h2>
+                    <p>Cada pieza de Claudiale nace de una emoción, un recuerdo o un sueño. Nuestros maestros joyeros combinan técnicas centenarias con la más avanzada tecnología para dar vida a obras únicas que trascienden el tiempo.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN COLECCIONES -->
+        <section class="espacio colecciones" id="colecciones">
+            <div class="colecciones-contenedor">
+                <h2 class="seccion-titulo">COLECCIONES</h2>
+                <div class="grid-colecciones" id="grid-colecciones">
+                    <!-- Las tarjetas se cargarán dinámicamente desde Supabase -->
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN CONFIGURADOR -->
+        <section class="espacio configurador" id="configurador">
+            <div class="configurador-contenido">
+                <header class="logo-flotante">
+                    <h1>CONFIGURADOR</h1>
+                </header>
+
+                <aside class="panel-flotante" id="panel-configurador">
+                    <div class="seccion-opciones">
+                        <h3>Metal</h3>
+                        <div class="grid-opciones" id="opciones-metal">
+                            <!-- Los botones se generarán desde materials.js o db -->
+                        </div>
+                    </div>
+
+                    <div class="seccion-opciones">
+                        <h3>Gema principal</h3>
+                        <div class="grid-opciones" id="opciones-gema">
+                            <!-- Los botones se generarán desde materials.js o db -->
+                        </div>
+                    </div>
+
+                    <div class="seccion-precio">
+                        <p>Valor estimado</p>
+                        <h2 id="precio-actual">$1,250.00</h2>
+                        <button class="btn-comprar" id="btn-anadir-carrito">AÑADIR AL CARRITO</button>
+                    </div>
+                </aside>
+            </div>
+        </section>
+
+        <!-- SECCIÓN SERVICIOS (A Better Way to Fly) -->
+        <section class="espacio servicios" id="servicios">
+            <div class="servicios-contenedor">
+                <h2 class="seccion-titulo">EXPERIENCIA EXCLUSIVA</h2>
+                <div class="grid-servicios">
+                    <div class="servicio-item">
+                        <div class="servicio-icono">⚒️</div>
+                        <h3>Diseño a medida</h3>
+                        <p>Creamos la pieza de tus sueños contigo.</p>
+                    </div>
+                    <div class="servicio-item">
+                        <div class="servicio-icono">💎</div>
+                        <h3>Asesoría de experto</h3>
+                        <p>Te guiamos en la elección del diamante perfecto.</p>
+                    </div>
+                    <div class="servicio-item">
+                        <div class="servicio-icono">🔒</div>
+                        <h3>Envío seguro</h3>
+                        <p>Entregamos tu tesoro con total discreción.</p>
+                    </div>
+                    <div class="servicio-item">
+                        <div class="servicio-icono">✋</div>
+                        <h3>Tallado único</h3>
+                        <p>Técnicas artesanales para un brillo inigualable.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN CONTACTO -->
+        <section class="espacio contacto" id="contacto">
+            <div class="contacto-contenedor">
+                <h2 class="seccion-titulo">COMIENZA TU VIAJE</h2>
+                <form class="formulario-contacto" id="formulario-contacto">
+                    <input type="text" name="nombre" placeholder="Nombre completo" required>
+                    <input type="email" name="email" placeholder="Email" required>
+                    <input type="tel" name="telefono" placeholder="Teléfono">
+                    <select name="interes" required>
+                        <option value="" disabled selected>Tipo de interés</option>
+                        <option value="compra">Compra inmediata</option>
+                        <option value="personalizado">Diseño personalizado</option>
+                        <option value="cotizacion">Cotización</option>
+                    </select>
+                    <textarea name="mensaje" placeholder="Cuéntanos tu idea..." rows="4"></textarea>
+                    <button type="submit" class="btn-enviar">ENVIAR MENSAJE</button>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <h3>CLAUDIALE JOYAS</h3>
+                <p>El arte del brillo eterno</p>
+            </div>
+            <div class="footer-links">
+                <h4>Explora</h4>
+                <ul>
+                    <li><a href="#filosofia">Filosofía</a></li>
+                    <li><a href="#colecciones">Colecciones</a></li>
+                    <li><a href="#configurador">Configurador 3D</a></li>
+                    <li><a href="#contacto">Contacto</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h4>Contacto</h4>
+                <p><a href="mailto:hola@claudialejoyas.com">hola@claudialejoyas.com</a></p>
+                <p>+34 123 456 789</p>
+                <p>Madrid · Barcelona</p>
+            </div>
+            <div class="footer-social">
+                <h4>Síguenos</h4>
+                <div class="social-icons">
+                    <a href="#" aria-label="Instagram">IG</a>
+                    <a href="#" aria-label="Facebook">FB</a>
+                    <a href="#" aria-label="Pinterest">PT</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 Claudiale Joyas. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- IMPORT MAP para Three.js y módulos -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.128.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.128.0/examples/jsm/"
+            }
+        }
+    </script>
+
+    <!-- Módulo principal -->
+    <script type="module" src="main.js"></script>
+</body>
+</html>
