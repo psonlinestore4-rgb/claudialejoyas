@@ -2,293 +2,994 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Atelier 3D | Claudiale Joyas</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Montserrat:wght@200;300;400;500&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Claudiale IA | Joyería Generativa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Montserrat:wght@200;300;400;500;600&display=swap" rel="stylesheet">
     <style>
-        /* --- ESTILOS EXCLUSIVOS PARA LA BOUTIQUE 3D --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-dorado: #d4af37;
+            --bg-dark: #050505;
+        }
+
         body {
             background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
-            overflow: hidden;
-            margin: 0;
+            overflow-x: hidden;
+            font-family: 'Montserrat', sans-serif;
+            color: #fff;
         }
 
-        /* Navbar adaptado */
+        /* Cursor personalizado */
+        #cursor-custom {
+            position: fixed;
+            width: 35px;
+            height: 35px;
+            border: 1px solid var(--color-dorado);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.15s ease-out, width 0.3s, height 0.3s, background 0.3s;
+            transform: translate(-50%, -50%);
+        }
+        #cursor-dot {
+            position: fixed;
+            width: 5px;
+            height: 5px;
+            background: var(--color-dorado);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+        }
+        .cursor-hover {
+            width: 65px !important;
+            height: 65px !important;
+            background: rgba(212, 175, 55, 0.1);
+            border: 0.5px solid var(--color-dorado) !important;
+        }
+        a, button, .opt-visual-btn, .step-icon, .prompt-chip, input, .send-chat {
+            cursor: none !important;
+        }
+
+        /* Navbar */
+        .navbar {
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            background: rgba(5, 5, 5, 0.95);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 15px 0;
+            backdrop-filter: blur(10px);
+        }
         .navbar-container {
-            display: flex; justify-content: space-between; align-items: center;
-            width: 100%; padding: 0 6vw; max-width: 1800px; margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 0 6vw;
+            max-width: 1800px;
+            margin: 0 auto;
         }
         .navbar-side { flex: 1; display: flex; align-items: center; }
-        .navbar-left { justify-content: flex-start; gap: 40px; }
-        .navbar-center { flex: 1; display: flex; justify-content: center; }
-        .navbar-right { justify-content: flex-end; gap: 40px; }
+        .navbar-left { justify-content: flex-start; gap: 30px; }
+        .navbar-center { flex: 0 0 auto; }
+        .navbar-right { justify-content: flex-end; gap: 30px; }
+        .nav-link {
+            color: #fff;
+            text-decoration: none;
+            font-family: 'Montserrat';
+            font-size: 11px;
+            letter-spacing: 2px;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+        .nav-link:hover { color: var(--color-dorado); }
 
-        /* REFACTORIZACIÓN PANEL ESTILO RICHTER PHILLIPS */
-        .panel-configurador-apple {
-            background: rgba(15, 15, 15, 0.7);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 30px;
-            width: 450px; /* Un poco más ancho para el layout de pasos */
+        /* Contenedor 3D */
+        #canvas-container {
+            position: relative;
+            width: 100vw;
             height: 70vh;
-            display: flex; /* Layout dividido */
-            position: absolute;
-            right: 6vw;
-            top: 55%;
-            transform: translateY(-50%);
-            z-index: 100;
+            margin-top: 75px;  
+            padding-bottom: 40px;
             overflow: hidden;
-            box-shadow: 0 40px 100px rgba(0,0,0,0.9);
+            background: transparent;  
+            z-index: 1;
         }
 
-        /* Sidebar de Pasos (Izquierda) */
-        .config-sidebar {
-            width: 80px;
-            background: rgba(0,0,0,0.2);
-            border-right: 1px solid rgba(255,255,255,0.05);
+        /* INDICADOR DE SCROLL FLOTANTE */
+        .scroll-indicator {
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 30px 0;
-            gap: 20px;
+            justify-content: center;
+            margin-top: -15px; 
+            margin-bottom: 25px;
+            position: relative;
+            z-index: 20;
+            animation: floating 2s ease-in-out infinite;
+        }
+        .scroll-indicator span {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--color-dorado);
+            text-shadow: 0 2px 10px rgba(212,175,55,0.3);
+            margin-bottom: 6px;
+        }
+        .scroll-indicator svg {
+            width: 20px;
+            height: 20px;
+            stroke: var(--color-dorado);
+            stroke-width: 1.5;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(8px); }
+            100% { transform: translateY(0px); }
         }
 
-        .step-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 12px;
+        /* Panel principal fluyendo en la página */
+        .config-panel-wrapper {
+            max-width: 1200px;
+            margin: 10px auto 60px auto; 
+            padding: 0 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .panel-configurador-apple {
+            background: rgba(15, 15, 15, 0.85);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 32px;
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Cabecera AI */
+        .ai-header {
+            padding: 20px 30px;
+            background: rgba(0,0,0,0.3);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .ai-avatar {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--color-dorado), #b88c1a);
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 1px solid transparent;
-            opacity: 0.4;
+            box-shadow: 0 0 12px rgba(212,175,55,0.3);
+        }
+        .ai-avatar svg { width: 26px; height: 26px; stroke: #000; fill: none; stroke-width: 1.8; }
+        .ai-header h2 {
+            font-family: 'Cormorant Garamond';
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: #fff;
+            letter-spacing: 1px;
+        }
+        .ai-header p {
+            font-size: 10px;
+            color: var(--color-dorado);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 4px;
         }
 
-        .step-icon:hover { opacity: 1; background: rgba(255,255,255,0.05); }
-        .step-icon.active { 
-            opacity: 1; 
-            background: rgba(212, 175, 55, 0.1); 
-            border-color: rgba(212, 175, 55, 0.5); 
+        /* Área del Chat IA - OCULTO */
+        .chat-ia-area {
+            display: none;
         }
-
-        .step-icon svg { width: 24px; height: 24px; fill: #fff; }
-
-        /* Contenido Principal (Derecha) */
-        .config-main-content {
-            flex: 1;
-            padding: 40px;
+        
+        .chat-messages {
+            background: rgba(0,0,0,0.25);
+            border-radius: 24px;
+            padding: 18px;
+            height: 280px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
+            gap: 16px;
+            margin-bottom: 20px;
+            scroll-behavior: smooth;
+        }
+        
+        .chat-messages::-webkit-scrollbar { width: 6px; }
+        .chat-messages::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 10px; }
+        .chat-messages::-webkit-scrollbar-thumb { background: var(--color-dorado); border-radius: 10px; }
+
+        .message {
+            display: flex;
+            flex-direction: column;
+            animation: messageFadeIn 0.4s ease forwards;
         }
 
-        .titulo-atelier {
-            color: var(--color-dorado);
-            font-family: 'Montserrat';
-            font-size: 9px;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            margin-bottom: 5px;
+        @keyframes messageFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .message.user { align-items: flex-end; }
+        .message.ai { align-items: flex-start; }
+        .bubble {
+            max-width: 85%;
+            padding: 10px 16px;
+            border-radius: 24px;
+            font-size: 12px;
+            line-height: 1.5;
+            background: rgba(30,30,35,0.9);
+            border: 0.5px solid rgba(255,255,255,0.05);
+        }
+        .user .bubble {
+            background: var(--color-dorado);
+            color: #000;
+            font-weight: 500;
+            border-bottom-right-radius: 5px;
+        }
+        .ai .bubble {
+            background: rgba(20,20,25,0.9);
+            color: #ddd;
+            border-bottom-left-radius: 5px;
         }
 
-        .seccion-paso { display: none; }
-        .seccion-paso.active { display: block; animation: fadeIn 0.5s ease; }
+        .generated-img {
+            margin-top: 12px;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(212,175,55,0.4);
+            max-width: 220px;
+        }
+        .generated-img canvas { width: 100%; display: block; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .quick-prompts {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .prompt-chip {
+            background: rgba(255,255,255,0.05);
+            border-radius: 40px;
+            padding: 6px 16px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: 0.2s;
+            border: 0.5px solid rgba(212,175,55,0.4);
+        }
+        .prompt-chip:hover { background: var(--color-dorado); color: #000; }
 
-        /* Grid Visual de Opciones (Icono + Texto) */
-        .grid-visual {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
+        /* Buscador AI - JUSTO DEBAJO DEL CHAT */
+        .ai-search-container {
+            padding: 30px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .chat-input-wrapper {
+            display: flex;
             gap: 12px;
-            margin-top: 20px;
+            position: relative;
         }
+        .chat-input-wrapper input {
+            flex: 1;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 60px;
+            padding: 14px 20px;
+            color: white;
+            font-size: 12px;
+            outline: none;
+            font-family: 'Montserrat', sans-serif;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            transition: border-color 0.3s;
+        }
+        .chat-input-wrapper input:focus { border-color: var(--color-dorado); }
+        .send-chat {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--color-dorado);
+            border: none;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: none;
+            transition: 0.3s;
+        }
+        .send-chat:hover { background: #fff; }
 
+        /* Steps horizontales - ABAJO DE LA BARRA DE BÚSQUEDA */
+        .steps-horizontal {
+            display: flex;
+            gap: 8px;
+            padding: 15px 30px;
+            background: rgba(0,0,0,0.2);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            flex-wrap: wrap;
+        }
+        .step-icon {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 40px;
+            padding: 8px 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            opacity: 0.6;
+        }
+        .step-icon.active {
+            opacity: 1;
+            background: rgba(212, 175, 55, 0.15);
+            border-color: var(--color-dorado);
+        }
+        .step-icon svg { width: 18px; height: 18px; fill: none; stroke: #fff; stroke-width: 1.5; }
+        .step-icon span { font-size: 11px; font-weight: 500; letter-spacing: 0.5px; }
+
+        /* Opciones visuales */
+        .options-container {
+            padding: 20px 30px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .seccion-paso { display: none; }
+        .seccion-paso.active { display: block; animation: fade 0.3s; }
+        
+        .grid-visual {
+            display: flex;
+            overflow-x: auto;
+            gap: 12px;
+            padding-bottom: 8px;
+            scrollbar-width: thin;
+        }
+        .grid-visual::-webkit-scrollbar { height: 3px; }
         .opt-visual-btn {
             background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 15px;
-            padding: 20px 10px;
-            text-align: center;
-            transition: 0.3s;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 40px;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            white-space: nowrap;
+            transition: 0.2s;
             cursor: pointer;
         }
-
-        .opt-visual-btn:hover { background: rgba(255,255,255,0.08); }
-        .opt-visual-btn.active { border-color: #D4AF37; background: rgba(212, 175, 55, 0.05); }
-
-        .opt-visual-btn img { width: 35px; height: 35px; margin-bottom: 10px; filter: invert(1); }
-        .opt-visual-btn span { display: block; color: #fff; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; }
-
-        /* Precios y Botón */
-        .footer-config { margin-top: auto; padding-top: 30px; }
-        #precio-actual {
-            font-family: 'Cormorant Garamond';
-            color: #fff;
-            font-size: 2.5rem;
-            margin: 5px 0 20px 0;
-            font-weight: 300;
+        .opt-visual-btn.active {
+            border-color: var(--color-dorado);
+            background: rgba(212,175,55,0.1);
         }
+        .color-dot { width: 16px; height: 16px; border-radius: 50%; }
+        .opt-visual-btn span { font-size: 12px; color: #eee; pointer-events: none; }
+        .opt-visual-btn img.svg-icon { pointer-events: none; }  
 
+        .footer-config {
+            padding: 20px 30px;
+            background: rgba(0,0,0,0.3);
+            display: flex;
+            justify-content: center; 
+            align-items: center;
+        }
+        
         .btn-apple-comprar {
-            width: 100%;
             background: #fff;
             color: #000;
             border: none;
-            padding: 18px;
-            border-radius: 12px;
+            padding: 18px 32px; 
+            border-radius: 40px;
             font-family: 'Montserrat';
-            font-size: 10px;
+            font-size: 12px; 
             font-weight: 600;
             letter-spacing: 2px;
+            transition: 0.3s;
             text-transform: uppercase;
-            transition: all 0.4s ease;
+            width: 100%; 
         }
+        .btn-apple-comprar:hover { background: var(--color-dorado); color: #fff; transform: translateY(-2px); }
 
-        .btn-apple-comprar:hover { background: #D4AF37; color: #fff; transform: translateY(-2px); }
+        @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Overlay de Carga */
-        .loading-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; display: flex; justify-content: center; align-items: center;
-            z-index: 999; color: #D4AF37; font-family: 'Montserrat'; letter-spacing: 5px; font-size: 12px;
-            animation: fadeOut 2s ease forwards 1.5s;
-        }
+        .loading-overlay { position: fixed; inset: 0; background: #000; z-index: 9999; display: flex; align-items: center; justify-content: center; color: var(--color-dorado); animation: fadeOut 1.8s forwards; pointer-events: none; }
         @keyframes fadeOut { to { opacity: 0; visibility: hidden; } }
+
+        .cart-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); z-index: 2000; opacity: 0; visibility: hidden; }
+        .cart-overlay.active { opacity: 1; visibility: visible; }
+
+        .cart-drawer { position: fixed; top: 0; bottom: 0; right: 0; width: 100%; max-width: 450px; background: #050505; z-index: 2001; transform: translateX(100%); display: flex; flex-direction: column; transition: transform 0.3s ease; }
+        .cart-drawer.active { transform: translateX(0); }
+        .cart-header { padding: 30px; display: flex; justify-content: space-between; align-items: center; }
+        .cart-close { background: transparent; border: none; color: #fff; font-size: 28px; padding: 0; }
+        .cart-body { flex: 1; padding: 30px; overflow-y: auto; }
+        .cart-footer { padding: 30px; background: #000; }
+        .cart-total { display: flex; justify-content: space-between; margin-bottom: 20px; }
+
+        .btn-checkout { width: 100%; background: #fff; color: #000; border: none; padding: 18px; border-radius: 8px; text-align: center; display: block; text-decoration: none; }
+        
+        /* --- AÑADIDO: ESTILOS DE LA IA DE LOS QUE HABLAMOS --- */
+        .ai-processing-overlay {
+            position: fixed; inset: 0; background: rgba(5, 5, 5, 0.95); backdrop-filter: blur(20px);
+            z-index: 3000; display: flex; flex-direction: column; align-items: center;
+            justify-content: center; opacity: 0; visibility: hidden; transition: all 0.5s ease;
+        }
+        .ai-processing-overlay.active { opacity: 1; visibility: visible; }
+        .ai-spinner {
+            width: 80px; height: 80px; border: 2px solid rgba(212, 175, 55, 0.2);
+            border-top: 2px solid var(--color-dorado); border-radius: 50%;
+            animation: spin 1s linear infinite; margin-bottom: 30px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .ai-process-text {
+            font-family: 'Cormorant Garamond'; font-size: 2.5rem; color: #fff;
+            letter-spacing: 2px; margin-bottom: 10px; text-align: center;
+        }
+        .ai-process-subtext {
+            font-family: 'Montserrat'; font-size: 11px; color: var(--color-dorado);
+            letter-spacing: 4px; text-transform: uppercase;
+        }
+        .modal-overlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(15px); z-index: 4000; 
+            display: none; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease; 
+        }
+        .modal-overlay.active { display: flex; opacity: 1; }
+        .modal-content { 
+            background: #111; border: 1px solid rgba(212,175,55,0.2); border-radius: 20px; 
+            width: 90%; max-width: 800px; display: flex; flex-direction: column; align-items: center; 
+            padding: 40px; position: relative; transform: scale(0.9); transition: transform 0.4s; 
+        }
+        .modal-overlay.active .modal-content { transform: scale(1); }
+        .modal-close { 
+            position: absolute; top: 20px; right: 20px; background: transparent; border: none; 
+            color: #fff; font-size: 24px; cursor: none; transition: 0.3s; 
+        }
+        .modal-close:hover { color: var(--color-dorado); transform: rotate(90deg); }
+        .modal-image-col { width: 100%; display: flex; justify-content: center; margin-bottom: 30px; }
+        .modal-image-col canvas { border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); max-width: 100%; }
+        .modal-title { font-family: 'Cormorant Garamond'; font-size: 2.5rem; font-weight: 300; color: #fff; margin-bottom: 10px; text-align: center; }
+        .modal-desc { font-family: 'Montserrat'; font-size: 11px; color: var(--color-dorado); letter-spacing: 2px; text-transform: uppercase; text-align: center; margin-bottom: 30px; line-height: 1.6; }
+        .btn-modal-add { 
+            background: #fff; color: #000; border: none; padding: 15px 40px; border-radius: 40px; 
+            font-family: 'Montserrat'; font-size: 11px; font-weight: 600; letter-spacing: 2px; cursor: none; transition: 0.3s; 
+        }
+        .btn-modal-add:hover { background: var(--color-dorado); color: #fff; }
     </style>
 </head>
 <body>
-    <div class="loading-overlay">INICIALIZANDO ATELIER 3D...</div>
 
-    <div id="cursor-custom"></div>
-    <div id="cursor-dot"></div>
+<div class="loading-overlay">CLAUDIALE ATELIER · IA GENERATIVA</div>
+<div id="cursor-custom"></div>
+<div id="cursor-dot"></div>
 
-    <nav id="navbar" class="navbar scrolled" style="background: rgba(10,10,10,0.8); border-bottom: 1px solid rgba(255,255,255,0.05);">
-        <div class="navbar-container">
-            <div class="navbar-side navbar-left">
-                <ul class="navbar-menu" style="margin:0; padding:0;">
-                    <li><a href="index.html" class="menu-link"><span class="menu-link-inner"><span class="menu-link-text">Inicio</span><span class="menu-link-text">Inicio</span></span></a></li>
-                    <li><a href="aboutus.html" class="menu-link"><span class="menu-link-inner"><span class="menu-link-text">Nosotros</span><span class="menu-link-text">Nosotros</span></span></a></li>
-                </ul>
+<nav class="navbar">
+    <div class="navbar-container">
+        <div class="navbar-side navbar-left">
+            <a href="index.html" class="nav-link">Inicio</a>
+            <a href="store.html" class="nav-link" style="color: var(--color-dorado);">Tienda</a>
+        </div>
+        <div class="navbar-center">
+            <a href="index.html" style="color:#fff; text-decoration:none; font-family:'Cormorant Garamond'; font-size:2rem; letter-spacing:8px;">CLAUDIALE</a>
+        </div>
+        <div class="navbar-side navbar-right">
+            <a href="#" class="nav-link" id="cart-trigger" style="display:flex; gap:8px;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                <span id="cart-count" style="background:#d4af37; color:#000; border-radius:50%; width:18px; height:18px; display:inline-flex; align-items:center; justify-content:center; font-size:9px;">0</span>
+            </a>
+        </div>
+    </div>
+</nav>
+
+<div id="canvas-container"></div>
+
+<div class="scroll-indicator">
+    <span>Haz tu idea realidad</span>
+    <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+</div>
+
+<div class="config-panel-wrapper">
+    <div class="panel-configurador-apple">
+        
+        <div class="ai-header">
+            <div class="ai-avatar">
+                <svg viewBox="0 0 24 24" stroke="currentColor" fill="none"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M12 12 2.1 14.9"/></svg>
             </div>
-            <div class="navbar-center">
-                <a href="index.html" class="navbar-logo" style="margin:0; font-size: 2.2rem;">CLAUDIALE</a>
-            </div>
-            <div class="navbar-side navbar-right">
-                <a href="#" class="menu-link"><span class="menu-link-inner"><span class="menu-link-text">CARRITO (0)</span><span class="menu-link-text">CARRITO (0)</span></span></a>
+            <div>
+                <h2>Claudiale AI · Joyero Virtual</h2>
+                <p>✨ Diseñador Generativo de Alta Joyería ✨</p>
             </div>
         </div>
-    </nav>
 
-    <div id="canvas-container" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1;"></div>
-
-    <main id="contenedor-scroll" style="height: 100vh; position: relative; z-index: 10; pointer-events: none;">
-        <section class="espacio configurador" style="width: 100%; height: 100%; position: relative;">
-            
-            <aside class="panel-configurador-apple" id="panel-configurador" style="pointer-events: auto;">
-                
-                <div class="config-sidebar">
-                    <div class="step-icon active" data-step="1" title="Piedra">
-                        <svg viewBox="0 0 24 24"><path d="M12,2L4.5,20.29L5.21,21L12,18L18.79,21L19.5,20.29L12,2Z"/></svg>
-                    </div>
-                    <div class="step-icon" data-step="2" title="Metal">
-                        <svg viewBox="0 0 24 24"><path d="M12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22Z"/></svg>
-                    </div>
+        <div class="chat-ia-area" style="display: none;">
+            <div class="chat-messages" id="chatMessages">
+                <div class="message ai">
+                    <div class="bubble">✨ Hola, soy tu joyero virtual basado en Inteligencia Artificial. El modelo de arriba es una muestra de nuestro trabajo artesanal. Utiliza los botones de abajo para enviarme las especificaciones de la joya de tus sueños.</div>
                 </div>
-
-                <div class="config-main-content">
-                    <p class="titulo-atelier">Customizer</p>
-                    <h2 style="font-family: 'Cormorant Garamond'; color: #fff; font-size: 2rem; margin-bottom: 25px; font-weight: 300;">Anillo Leyenda</h2>
-
-                    <div class="seccion-paso active" id="paso-1">
-                        <h3 style="color:#fff; font-size: 11px; text-transform: uppercase; letter-spacing: 2px;">Forma de la Piedra</h3>
-                        <div class="grid-visual">
-                            <div class="opt-visual-btn active" data-value="round">
-                                <img src="assets/icons/round.svg" alt="Round">
-                                <span>Brillante</span>
-                            </div>
-                            <div class="opt-visual-btn" data-value="marquise">
-                                <img src="assets/icons/marquise.svg" alt="Marquise">
-                                <span>Marquise</span>
-                            </div>
-                            <div class="opt-visual-btn" data-value="pear">
-                                <img src="assets/icons/pear.svg" alt="Pear">
-                                <span>Pera</span>
-                            </div>
-                            <div class="opt-visual-btn" data-value="emerald">
-                                <img src="assets/icons/emerald.svg" alt="Emerald">
-                                <span>Esmeralda</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="seccion-paso" id="paso-2">
-                        <h3 style="color:#fff; font-size: 11px; text-transform: uppercase; letter-spacing: 2px;">Metal de la Banda</h3>
-                        <div class="grid-visual">
-                            <div class="opt-visual-btn" data-value="yellow-gold">
-                                <div style="width:20px; height:20px; background:#D4AF37; border-radius:50%; margin: 0 auto 10px auto;"></div>
-                                <span>Oro Amarillo</span>
-                            </div>
-                            <div class="opt-visual-btn" data-value="platinum">
-                                <div style="width:20px; height:20px; background:#E5E4E2; border-radius:50%; margin: 0 auto 10px auto;"></div>
-                                <span>Platino</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="footer-config">
-                        <p style="color:rgba(255,255,255,0.4); font-size: 10px; text-transform: uppercase; letter-spacing: 2px; margin:0;">Total estimado</p>
-                        <h2 id="precio-actual">$1,250.00</h2>
-                        <button class="btn-apple-comprar" id="btn-anadir-carrito">AÑADIR A LA BOLSA</button>
-                    </div>
+                <div class="message ai">
+                    <div class="bubble">💎 Cada vez que elijas una opción, se agregará a tu diseño. Cuando estés listo, puedes presionar "Procesar Pedido".</div>
                 </div>
+            </div>
+            <div class="quick-prompts" id="quickPrompts"></div>
+        </div>
 
-            </aside>
-        </section>
-    </main>
+        <div class="ai-search-container">
+            <div class="chat-input-wrapper">
+                <input type="text" id="chatInput" placeholder="O escribe libremente: 'Anillo de oro rosa con diamante ovalado de 2 quilates...'">
+                <button class="send-chat" id="sendChatBtn">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                </button>
+            </div>
+        </div>
 
-    <script type="importmap">
-        {
-            "imports": {
-                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
-                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
-            }
+        <div class="steps-horizontal">
+            <div class="step-icon active" data-step="1"><svg viewBox="0 0 24 24"><path d="M12,2L4.5,20.29L5.21,21L12,18L18.79,21L19.5,20.29L12,2Z" stroke="currentColor" fill="none"/></svg><span>Forma</span></div>
+            <div class="step-icon" data-step="2"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" fill="none"/></svg><span>Tamaño</span></div>
+            <div class="step-icon" data-step="3"><svg viewBox="0 0 24 24"><path d="M12 2 L12 22 M2 12 L22 12" stroke="currentColor"/></svg><span>Acabado</span></div>
+            <div class="step-icon" data-step="4"><svg viewBox="0 0 24 24"><path d="M17.5 12A1.5 1.5 0 0 1 16 10.5 1.5 1.5 0 0 1 17.5 9a1.5 1.5 0 0 1 1.5 1.5 1.5 1.5 0 0 1-1.5 1.5z" stroke="currentColor"/></svg><span>Metal</span></div>
+        </div>
+
+        <div class="options-container">
+            <div class="seccion-paso active" id="paso-1">
+                <div class="grid-visual" id="shape-grid">
+                    <div class="opt-visual-btn btn-forma active" data-value="circle"><span>Corte Círculo</span></div>
+                    <div class="opt-visual-btn btn-forma" data-value="oval"><span>Corte Óvalo</span></div>
+                    <div class="opt-visual-btn btn-forma" data-value="princess"><span>Princesa</span></div>
+                    <div class="opt-visual-btn btn-forma" data-value="drop"><span>Corte Gota</span></div>
+                    <div class="opt-visual-btn btn-forma" data-value="marquis"><span>Marquis</span></div>
+                </div>
+            </div>
+            <div class="seccion-paso" id="paso-2">
+                <div class="grid-visual" id="size-grid">
+                    <div class="opt-visual-btn btn-tamano" data-scale="0.85" data-price="0"><span>Pequeño</span></div>
+                    <div class="opt-visual-btn btn-tamano active" data-scale="1.0" data-price="250"><span>Mediano</span></div>
+                    <div class="opt-visual-btn btn-tamano" data-scale="1.25" data-price="600"><span>Grande</span></div>
+                </div>
+            </div>
+            <div class="seccion-paso" id="paso-3">
+                <div class="grid-visual" id="finish-grid">
+                    <div class="opt-visual-btn btn-brazo active" data-finish="pulido"><span>Pulido Brillante</span></div>
+                    <div class="opt-visual-btn btn-brazo" data-finish="mate"><span>Satinado Mate</span></div>
+                    <div class="opt-visual-btn btn-brazo" data-finish="cepillado"><span>Cepillado</span></div>
+                </div>
+            </div>
+            <div class="seccion-paso" id="paso-4">
+                <div class="grid-visual" id="metal-grid">
+                    <div class="opt-visual-btn btn-metal active" data-value="yellow-gold"><div class="color-dot" style="background:#E1C699;"></div><span>Oro Amarillo 18k </span></div>
+                    <div class="opt-visual-btn btn-metal" data-value="platinum"><div class="color-dot" style="background:#F4F4F4;"></div><span>Platino Brillante </span></div>
+                    <div class="opt-visual-btn btn-metal" data-value="rose-gold"><div class="color-dot" style="background:#DDA9A0;"></div><span>Oro Rosa 18k </span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-config">
+            <button class="btn-apple-comprar" id="btn-anadir-carrito">PROCESAR PEDIDO</button>
+        </div>
+    </div>
+</div>
+
+<div class="ai-processing-overlay" id="aiProcessScreen">
+    <div class="ai-spinner"></div>
+    <h2 class="ai-process-text" id="aiProcessText">Analizando proporciones...</h2>
+    <p class="ai-process-subtext">Motor Generativo Claudiale</p>
+</div>
+
+<div class="modal-overlay" id="resultModal">
+    <div class="modal-content">
+        <button class="modal-close" id="closeResultBtn">&times;</button>
+        <h2 class="modal-title">Tu Obra Maestra</h2>
+        <p class="modal-desc" id="modalPromptDesc">Generado por Inteligencia Artificial</p>
+        <div class="modal-image-col" id="finalImageContainer"></div>
+        <button class="btn-modal-add" id="btn-save-design">GUARDAR DISEÑO</button>
+    </div>
+</div>
+
+<div class="cart-overlay" id="cartOverlay"></div>
+<div class="cart-drawer" id="cartDrawer">
+    <div class="cart-header">
+        <h2>Tu Bolsa</h2>
+        <button class="cart-close" id="closeCartBtn">&times;</button>
+    </div>
+    <div class="cart-body">
+        <div class="cart-empty">Tu bolsa está vacía.</div>
+    </div>
+    <div class="cart-footer">
+        <div class="cart-total"><span>Total</span><span>$0.00</span></div>
+        <a href="checkout.html" class="btn-checkout">PROCEDER AL PAGO</a>
+    </div>
+</div>
+
+<script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.164.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.164.0/examples/jsm/"
         }
-    </script>
-    <script type="module" src="main.js"></script>
+    }
+</script>
+
+<script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+    import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+    // ---------- ESCENA 3D ----------
+    const container = document.getElementById('canvas-container');
+    const scene = new THREE.Scene();
+    scene.background = null;
     
-    <script>
-        /* LÓGICA DE INTERFAZ PASO A PASO */
-        document.querySelectorAll('.step-icon').forEach(icon => {
-            icon.addEventListener('click', () => {
-                document.querySelectorAll('.step-icon, .seccion-paso').forEach(el => el.classList.remove('active'));
-                icon.classList.add('active');
-                document.getElementById('paso-' + icon.dataset.step).classList.add('active');
-            });
-        });
+    const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+    camera.position.set(1.5, 1.2, 2.5); 
+    
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.shadowMap.enabled = true;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 2.5;  
+    container.appendChild(renderer.domElement);
+    
+    const pmremGenerator = new THREE.PMREMGenerator(renderer);
+    scene.environment = pmremGenerator.fromScene(new RoomEnvironment(), 0.04).texture;
 
-        /* LÓGICA DE CURSOR PERSONALIZADO */
-        const cursor = document.getElementById('cursor-custom');
-        const dot = document.getElementById('cursor-dot');
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.autoRotate = true;
+    controls.autoRotateSpeed = 1.5;
+    controls.enableZoom = false;
+    controls.enablePan = false;
+    controls.target.set(0, 0, 0);  
+    
+    // Luces
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+    scene.add(ambientLight);
+    const mainLight = new THREE.DirectionalLight(0xfff5e0, 4.0);
+    mainLight.position.set(2, 4, 2.5);
+    mainLight.castShadow = true;
+    scene.add(mainLight);
+    const fillLight = new THREE.PointLight(0xd4af37, 2.0);
+    fillLight.position.set(1.2, 1.8, 1.5);
+    scene.add(fillLight);
+
+    // 🔥 ESTADO GLOBAL (IA)
+    const estado = {
+        forma: "circle",
+        tamaño: 1.0,
+        metal: "yellow-gold",
+        acabado: "pulido"
+    };
+
+    // 🎨 CONFIG MATERIALES
+    const materialesConfig = {
+        'yellow-gold': { color: 0xE1C699, metalness: 1.0, roughness: 0.15 },
+        'rose-gold':   { color: 0xDDA9A0, metalness: 1.0, roughness: 0.15 },
+        'platinum':    { color: 0xF4F4F4, metalness: 1.0, roughness: 0.08 },
+        'diamante':    { color: 0xffffff, transmission: 1.0, ior: 2.417, roughness: 0 }
+    };
+    
+    let modelo;
+    const loader = new GLTFLoader();
+
+    function aplicarMaterialReal(mesh, tipo, config) {
+        if (tipo === 'metal') {
+            mesh.material = new THREE.MeshStandardMaterial({
+                color: config.color, metalness: config.metalness, roughness: config.roughness, side: THREE.DoubleSide
+            });
+        } else if (tipo === 'gem') {
+            mesh.material = new THREE.MeshPhysicalMaterial({
+                color: config.color, metalness: 0, roughness: 0, transmission: 1.0, ior: 2.417, dispersion: 0.08, side: THREE.DoubleSide
+            });
+        }
+        mesh.material.needsUpdate = true;
+    }
+
+    loader.load('assets/models/anillo_real.glb', (gltf) => {
+        modelo = gltf.scene;
         
-        document.addEventListener('mousemove', (e) => {
-            dot.style.left = e.clientX + 'px'; dot.style.top = e.clientY + 'px';
-            setTimeout(() => { cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px'; }, 40);
+        const basura = [];
+        modelo.traverse((child) => { if (child.isLight || child.isCamera) basura.push(child); });
+        basura.forEach(b => b.removeFromParent());
+
+        const boxEscala = new THREE.Box3();
+        modelo.traverse((child) => {
+            if (child.isMesh && !child.name.toLowerCase().includes('plane') && !child.name.toLowerCase().includes('ground')) {
+                boxEscala.expandByObject(child);
+            }
+        });
+        const size = new THREE.Vector3();
+        boxEscala.getSize(size);
+        const maxDim = Math.max(size.x, size.y, size.z);
+        
+        // ESCALA REDUCIDA A 2.2
+        modelo.userData.baseScale = 2.2 / maxDim;
+        modelo.scale.setScalar(modelo.userData.baseScale);
+
+        modelo.updateMatrixWorld(true);
+        const center = new THREE.Box3().setFromObject(modelo).getCenter(new THREE.Vector3());
+        modelo.position.sub(center);
+
+        modelo.traverse((child) => {
+            if (child.isMesh) {
+                const nombre = child.name.toLowerCase();
+                if (nombre.includes('plane') || nombre.includes('ground')) { child.visible = false; return; }
+                const esGema = child.name === "Object_2_Material_3_0" || nombre.includes('gem') || nombre.includes('diam');
+                
+                if (esGema) {
+                    aplicarMaterialReal(child, 'gem', materialesConfig['diamante']);
+                    child.userData.tipo = 'gem'; 
+                } else {
+                    aplicarMaterialReal(child, 'metal', materialesConfig[estado.metal]);
+                    child.userData.tipo = 'metal'; 
+                }
+            }
         });
 
-        // Hover interactivo
-        const updateHovers = () => {
-            document.querySelectorAll('a, button, .opt-visual-btn, .step-icon').forEach(el => {
-                el.addEventListener('mouseenter', () => cursor.classList.add('cursor-hover'));
-                el.addEventListener('mouseleave', () => cursor.classList.remove('cursor-hover'));
-                el.style.cursor = 'none';
+        scene.add(modelo);
+    });
+    
+    function animate() {
+        requestAnimationFrame(animate);
+        controls.update();
+        renderer.render(scene, camera);
+    }
+    animate();
+    
+    window.addEventListener('resize', () => {
+        camera.aspect = container.clientWidth / container.clientHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(container.clientWidth, container.clientHeight);
+    });
+    
+    // ---------- INTERFAZ UI Y ESTADO ----------
+    const chatMessages = document.getElementById('chatMessages');
+    const chatInput = document.getElementById('chatInput');
+    const sendBtn = document.getElementById('sendChatBtn');
+
+    function escapeHtml(str) { return str.replace(/[&<>]/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m])); }
+
+    function addMessage(sender, text) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `message ${sender}`;
+        msgDiv.innerHTML = `<div class="bubble"><div>${escapeHtml(text)}</div></div>`;
+        chatMessages.appendChild(msgDiv);
+        
+        setTimeout(() => {
+            chatMessages.scrollTo({
+                top: chatMessages.scrollHeight,
+                behavior: 'smooth'
             });
-        };
-        setTimeout(updateHovers, 1000);
-    </script>
+        }, 50);
+    }
+
+    // Interacción botones visuales -> Integración con Chat IA (Un solo valor por categoría)
+    function actualizarInputPrompt() {
+        const formaActiva = document.querySelector('#shape-grid .opt-visual-btn.active');
+        const tamanoActivo = document.querySelector('#size-grid .opt-visual-btn.active');
+        const acabadoActivo = document.querySelector('#finish-grid .opt-visual-btn.active');
+        const metalActivo = document.querySelector('#metal-grid .opt-visual-btn.active');
+
+        let partes = [];
+        if (formaActiva) partes.push(formaActiva.innerText.trim());
+        if (metalActivo) partes.push("en " + metalActivo.innerText.trim());
+        if (tamanoActivo) partes.push("tamaño " + tamanoActivo.innerText.trim());
+        if (acabadoActivo) partes.push("acabado " + acabadoActivo.innerText.trim());
+
+        if (partes.length > 0) {
+            chatInput.value = "Anillo " + partes.join(", ");
+        } else {
+            chatInput.value = "";
+        }
+    }
+
+    document.querySelectorAll('.opt-visual-btn').forEach(btn => {
+        btn.addEventListener('click', function() {  
+            let parent = this.parentElement;  
+            parent.querySelectorAll('.opt-visual-btn').forEach(b=>b.classList.remove('active'));  
+            this.classList.add('active');  
+            
+            actualizarInputPrompt();
+            chatInput.focus();
+        });
+    });
+    
+    // Pestañas
+    document.querySelectorAll('.step-icon').forEach(icon => {
+        icon.addEventListener('click', () => {
+            document.querySelectorAll('.step-icon, .seccion-paso').forEach(el => el.classList.remove('active'));
+            icon.classList.add('active');
+            document.getElementById('paso-' + icon.dataset.step).classList.add('active');
+        });
+    });
+
+    // --- AÑADIDO: FUNCIÓN DE DIBUJO SIMULADO PARA EL MODAL ---
+    function generateRingImageCanvas(promptText) {
+        const canvas = document.createElement('canvas');
+        canvas.width = 600;
+        canvas.height = 600;
+        const ctx = canvas.getContext('2d');
+        const grad = ctx.createRadialGradient(300, 300, 50, 300, 300, 400);
+        grad.addColorStop(0, '#1a1a2e');
+        grad.addColorStop(1, '#020205');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 600, 600);
+        const cx = 300, cy = 300;
+        ctx.beginPath();
+        ctx.arc(cx, cy - 20, 150, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255, 245, 230, 0.05)';
+        ctx.filter = 'blur(40px)';
+        ctx.fill();
+        ctx.filter = 'none';
+        ctx.shadowBlur = 20;
+        ctx.shadowColor = 'rgba(0,0,0,0.8)';
+        ctx.beginPath();
+        ctx.ellipse(cx, cy + 20, 140, 110, 0, 0, Math.PI*2);
+        let metalColor = '#E1C699';
+        if(promptText.toLowerCase().includes('platino') || promptText.toLowerCase().includes('blanco')) metalColor = '#F4F4F4';
+        if(promptText.toLowerCase().includes('rosa')) metalColor = '#DDA9A0';
+        ctx.fillStyle = metalColor;
+        ctx.fill();
+        ctx.strokeStyle = '#fff8e7';
+        ctx.lineWidth = 3;
+        ctx.stroke();
+        ctx.shadowBlur = 10;
+        ctx.save();
+        ctx.translate(cx, cy - 10);
+        ctx.fillStyle = '#eaf6ff';
+        ctx.shadowColor = 'rgba(255,255,255,0.4)';
+        ctx.shadowBlur = 15;
+        let p = promptText.toLowerCase();
+        if(p.includes('ovalo')) { ctx.beginPath(); ctx.ellipse(0, -30, 75, 55, 0, 0, Math.PI*2); ctx.fill(); }
+        else if(p.includes('princesa') || p.includes('cuadrado')) { ctx.fillRect(-55, -80, 110, 110); }
+        else if(p.includes('gota')) { ctx.beginPath(); ctx.moveTo(0,-100); ctx.quadraticCurveTo(45,-10,0,40); ctx.quadraticCurveTo(-45,-10,0,-100); ctx.fill(); }
+        else if(p.includes('marquis')) { ctx.beginPath(); ctx.ellipse(0, -30, 85, 45, 0, 0, Math.PI*2); ctx.fill(); }
+        else { ctx.beginPath(); ctx.arc(0, -30, 65, 0, Math.PI*2); ctx.fill(); }
+        ctx.beginPath();
+        ctx.arc(-25, -50, 18, 0, Math.PI*2);
+        ctx.fillStyle = 'rgba(255,255,255,0.8)';
+        ctx.fill();
+        ctx.restore();
+        ctx.font = "300 14px 'Montserrat'";
+        ctx.fillStyle = 'rgba(212,175,55,0.7)';
+        ctx.fillText("CLAUDIALE AI · HOJA TÉCNICA (SIMULACIÓN)", cx - 150, 560);
+        return canvas;
+    }
+    
+    // Chat con IA base (Solo se ejecuta al presionar ENTER o el botón de enviar)
+    async function generarImagenIA(promptText) {
+        addMessage('user', promptText);
+        
+        const loadingMsg = document.createElement('div');
+        loadingMsg.className = 'message ai';
+
+        loadingMsg.innerHTML = `<div class="bubble" style="opacity:0.7;">✨ Procesando petición con el servidor de diseño... ✨</div>`;
+        chatMessages.appendChild(loadingMsg);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        
+        // --- AÑADIDO: LÓGICA DE LA IA, PANTALLA DE CARGA Y MODAL ---
+        const processScreen = document.getElementById('aiProcessScreen');
+        const processText = document.getElementById('aiProcessText');
+        const resultModal = document.getElementById('resultModal');
+        const finalImageContainer = document.getElementById('finalImageContainer');
+        const modalPromptDesc = document.getElementById('modalPromptDesc');
+
+        let promptMagico = `${promptText}. Hoja de diseño conceptual de alta joyería. Muestra el mismo anillo exactamente en 3 ángulos diferentes sobre un fondo neutro sólido: vista superior, vista de perfil lateral y vista en perspectiva isométrica. Diseño técnico limpio, proporciones perfectas y fotorrealista.`;
+
+        processScreen.classList.add('active');
+
+        processText.innerText = "Analizando proporciones...";
+        await new Promise(r => setTimeout(r, 1200));
+        processText.innerText = "Calculando refracción de luz...";
+        await new Promise(r => setTimeout(r, 1200));
+        processText.innerText = "Preparando hoja técnica...";
+        await new Promise(r => setTimeout(r, 1200));
+
+        /*
+        // CÓDIGO FETCH PARA TU SERVIDOR REAL:
+        try {
+            const respuesta = await fetch("URL_DE_TU_SERVIDOR_AQUI", {
+                method: "POST",
+                headers: { "Authorization": "Bearer TU_API_KEY_AQUI", "Content-Type": "application/json" },
+                body: JSON.stringify({ prompt: promptMagico })
+            });
+            const datos = await respuesta.json();
+            finalImageContainer.innerHTML = `<img src="${datos.output[0]}" style="width:100%; border-radius:12px; box-shadow:0 10px 40px rgba(0,0,0,0.5);">`;
+        } catch(e) { console.error(e); }
+        */
+
+        const canvasFinal = generateRingImageCanvas(promptText);
+        finalImageContainer.innerHTML = '';
+        finalImageContainer.appendChild(canvasFinal);
+
+        processScreen.classList.remove('active');
+        modalPromptDesc.innerHTML = `<strong>PROMPT TÉCNICO ENVIADO AL TALLER:</strong><br> "${promptMagico}"`;
+
+        setTimeout(() => {
+            resultModal.classList.add('active');
+        }, 300);
+        // --- FIN DE LO AÑADIDO ---
+
+        loadingMsg.remove();
+        
+        addMessage('ai', `¡Entendido! Tu petición: "${promptText.substring(0, 50)}..." ha sido registrada para integrarse con la API de IA.`);
+    }
+    
+
+    sendBtn.addEventListener('click', () => { 
+        if(chatInput.value.trim()) generarImagenIA(chatInput.value.trim()); 
+        chatInput.value = ''; 
+    });
+    chatInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') sendBtn.click(); });
+    
+    // Carrito
+
+    
+    document.getElementById('btn-anadir-carrito').addEventListener('click', () => alert('✨ Diseño guardado y agregado a la bolsa'));
+    const cartOverlay = document.getElementById('cartOverlay');
+    const cartDrawer = document.getElementById('cartDrawer');
+    
+    document.getElementById('cart-trigger').addEventListener('click', (e) => {  
+        e.preventDefault();  
+        cartOverlay.classList.add('active');
+        cartDrawer.classList.add('active');
+    });
+    
+    document.getElementById('closeCartBtn')?.addEventListener('click', () => {
+        cartOverlay.classList.remove('active');
+        cartDrawer.classList.remove('active');
+    });
+    
+    cartOverlay?.addEventListener('click', () => {
+        cartOverlay.classList.remove('active');
+        cartDrawer.classList.remove('active');
+    });
+
+    // --- AÑADIDO: EVENTOS DEL MODAL DE IA ---
+    document.getElementById('closeResultBtn')?.addEventListener('click', () => {
+        document.getElementById('resultModal').classList.remove('active');
+    });
+    document.getElementById('btn-save-design')?.addEventListener('click', () => {
+        alert('✨ Hoja técnica guardada. El taller ha sido notificado.');
+        document.getElementById('resultModal').classList.remove('active');
+    });
+
+    // Cursor personalizado
+    const cursorBig = document.getElementById('cursor-custom');
+    const cursorDot = document.getElementById('cursor-dot');
+    
+    window.addEventListener('mousemove', (e) => {
+        cursorDot.style.left = e.clientX + 'px';
+        cursorDot.style.top = e.clientY + 'px';
+        setTimeout(() => {  
+            cursorBig.style.left = e.clientX + 'px';  
+            cursorBig.style.top = e.clientY + 'px';  
+        }, 40);
+    });
+    
+    const addHovers = () => {
+
+        document.querySelectorAll('a, button, .opt-visual-btn, .step-icon, .prompt-chip, .send-chat, input').forEach(el => {
+            el.addEventListener('mouseenter', () => cursorBig.classList.add('cursor-hover'));
+            el.addEventListener('mouseleave', () => cursorBig.classList.remove('cursor-hover'));
+        });
+    };
+    setTimeout(addHovers, 200);
+</script>
 </body>
 </html>

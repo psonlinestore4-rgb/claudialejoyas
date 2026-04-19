@@ -1,3 +1,4 @@
+// js/modules/ring-loader.js
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
@@ -23,6 +24,16 @@ export function loadRingModel(scene, url) {
                     const scale = 2.5 / maxDim; 
                     model.scale.set(scale, scale, scale);
                 }
+
+                // --- NUEVO: Habilitar sombras y pulir renderizado en las mallas ---
+                model.traverse((child) => {
+                    if (child.isMesh) {
+                        child.castShadow = true;
+                        child.receiveShadow = true;
+                        // Asegura que las geometrías complejas se rendericen suaves
+                        child.geometry.computeVertexNormals(); 
+                    }
+                });
 
                 scene.add(model);
                 resolve(model); // ¡Éxito!

@@ -5,7 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Boutique | Claudiale Joyas</title>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Montserrat:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
     <style>
+        /* ========== TODO TU CSS ORIGINAL ========== */
         :root {
             --color-dorado: #d4af37;
             --bg-dark: #050505;
@@ -19,7 +22,7 @@
             font-family: 'Montserrat', sans-serif;
         }
 
-        /* --- CURSOR PERSONALIZADO (mejorado con efectos de index) --- */
+        /* --- CURSOR PERSONALIZADO --- */
         #cursor-custom {
             position: fixed;
             width: 35px;
@@ -58,7 +61,7 @@
             cursor: none !important;
         }
 
-        /* --- NAVBAR (igual que antes) --- */
+        /* --- NAVBAR --- */
         .navbar {
             position: fixed;
             width: 100%;
@@ -116,7 +119,7 @@
             color: var(--color-dorado);
         }
 
-        /* --- HERO (sin cambios) --- */
+        /* --- HERO --- */
         .hero-store {
             position: relative;
             height: 90vh;
@@ -196,7 +199,7 @@
             color: #000;
         }
 
-        /* --- TARJETAS CATEGORÍAS FLOTANTES (sin cambios) --- */
+        /* --- TARJETAS CATEGORÍAS FLOTANTES --- */
         .floating-categories {
             position: absolute;
             bottom: -80px;
@@ -249,7 +252,7 @@
             gap: 5px;
         }
 
-        /* --- SECCIÓN DESTACADA (sin cambios) --- */
+        /* --- SECCIÓN DESTACADA --- */
         .featured-section {
             display: flex;
             padding: 0 6vw 100px 6vw;
@@ -284,7 +287,7 @@
             gap: 20px;
         }
 
-        /* --- TARJETA DE PRODUCTO BLANCA (sin cambios) --- */
+        /* --- TARJETA DE PRODUCTO BLANCA --- */
         .card-light {
             background: #fff;
             border-radius: 15px;
@@ -384,7 +387,7 @@
             background: var(--color-dorado);
         }
 
-        /* --- LAYOUT PRINCIPAL (sin cambios) --- */
+        /* --- LAYOUT PRINCIPAL --- */
         .store-layout {
             display: flex;
             padding: 50px 6vw 100px 6vw;
@@ -494,7 +497,7 @@
             gap: 25px;
         }
 
-        /* --- MODAL QUICK VIEW (sin cambios) --- */
+        /* --- MODAL QUICK VIEW --- */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -662,7 +665,7 @@
             background: var(--color-dorado);
         }
 
-        /* --- SIDEBAR CARRITO (sin cambios) --- */
+        /* --- SIDEBAR CARRITO --- */
         .cart-overlay {
             position: fixed;
             top: 0;
@@ -687,20 +690,22 @@
         .cart-drawer {
             position: fixed;
             top: 0;
-            right: -500px;
+            bottom: 0;
+            right: 0;
             width: 100%;
             max-width: 450px;
-            height: 100vh;
             background: #050505;
             z-index: 2001;
-            transition: right 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             border-left: 1px solid rgba(255, 255, 255, 0.05);
             display: flex;
             flex-direction: column;
+            box-sizing: border-box;
         }
 
         .cart-drawer.active {
-            right: 0;
+            transform: translateX(0);
         }
 
         .cart-header {
@@ -709,14 +714,16 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            box-sizing: border-box;
         }
 
         .cart-header h2 {
-            font-family: 'Cormorant Garamond';
-            font-size: 2rem;
-            font-weight: 300;
-            margin: 0;
-            color: #fff;
+            font-family: 'Cormorant Garamond', serif !important;
+            font-size: 2rem !important;
+            font-weight: 300 !important;
+            margin: 0 !important;
+            color: #fff !important;
+            line-height: 1.2 !important;
         }
 
         .cart-close {
@@ -727,6 +734,7 @@
             cursor: none;
             transition: 0.3s;
             line-height: 1;
+            padding: 0;
         }
 
         .cart-close:hover {
@@ -741,42 +749,47 @@
             display: flex;
             flex-direction: column;
             gap: 20px;
+            box-sizing: border-box;
         }
 
         .cart-empty {
             text-align: center;
-            color: rgba(255, 255, 255, 0.4);
-            font-family: 'Montserrat';
-            font-size: 12px;
-            margin-top: 50px;
+            color: rgba(255, 255, 255, 0.6) !important;
+            font-family: 'Montserrat', sans-serif !important;
+            font-size: 14px !important;
+            margin-top: 50px !important;
+            line-height: 1.5 !important;
         }
 
         .cart-footer {
             padding: 30px;
             border-top: 1px solid rgba(255, 255, 255, 0.05);
             background: #000;
+            box-sizing: border-box;
         }
 
         .cart-total {
             display: flex;
             justify-content: space-between;
-            font-family: 'Montserrat';
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 20px;
-            color: #fff;
+            align-items: center;
+            font-family: 'Montserrat', sans-serif !important;
+            font-size: 16px !important;
+            font-weight: 600 !important;
+            margin-bottom: 20px !important;
+            color: #fff !important;
+            line-height: 1.2 !important;
         }
 
         .btn-checkout {
             width: 100%;
             background: #fff;
-            color: #000;
+            color: #000 !important;
             border: none;
             padding: 18px;
             border-radius: 8px;
-            font-family: 'Montserrat';
-            font-size: 11px;
-            font-weight: 600;
+            font-family: 'Montserrat', sans-serif !important;
+            font-size: 12px !important;
+            font-weight: 600 !important;
             letter-spacing: 2px;
             text-transform: uppercase;
             cursor: none;
@@ -784,14 +797,16 @@
             text-align: center;
             display: block;
             text-decoration: none;
+            line-height: 1.5 !important;
+            box-sizing: border-box;
         }
 
         .btn-checkout:hover {
             background: var(--color-dorado);
-            color: #fff;
+            color: #fff !important;
         }
 
-        /* --- ANIMACIONES REVEAL (desde index) --- */
+        /* --- ANIMACIONES REVEAL --- */
         .reveal {
             opacity: 0;
             transform: translateY(30px);
@@ -802,6 +817,70 @@
             opacity: 1;
             transform: translateY(0);
         }
+
+        /* ========== ESTILOS REUTILIZABLES PARA MODALES ========== */
+        .contact-form-group {
+            margin-bottom: 20px;
+        }
+        .contact-form-group label {
+            display: block;
+            font-size: 11px;
+            letter-spacing: 2px;
+            color: #888;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+        .contact-form-group input,
+        .contact-form-group select,
+        .contact-form-group textarea {
+            width: 100%;
+            padding: 12px;
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: 'Montserrat';
+            font-size: 13px;
+            color: #000;
+            outline: none;
+            transition: 0.2s;
+        }
+        .contact-form-group input:focus,
+        .contact-form-group select:focus,
+        .contact-form-group textarea:focus {
+            border-color: var(--color-dorado);
+        }
+        .btn-contact-send {
+            background: #000;
+            color: #fff;
+            border: none;
+            padding: 14px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: none;
+            width: 100%;
+            transition: 0.3s;
+        }
+        .btn-contact-send:hover {
+            background: var(--color-dorado);
+            color: #000;
+        }
+        .contact-success {
+            text-align: center;
+            color: #27ae60;
+            margin-top: 20px;
+            font-size: 13px;
+            display: none;
+        }
+        .contact-error {
+            text-align: center;
+            color: #e74c3c;
+            margin-top: 20px;
+            font-size: 13px;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -809,12 +888,11 @@
     <div id="cursor-custom"></div>
     <div id="cursor-dot"></div>
 
-    <!-- NAVBAR -->
     <nav class="navbar">
         <div class="navbar-container">
             <div class="navbar-side navbar-left">
                 <a href="index.html" class="nav-link">Inicio</a>
-                <a href="aboutus.html" class="nav-link">Conocenos</a>
+                <a href="aboutus2.html" class="nav-link">Conocenos</a>
             </div>
 
             <div class="navbar-center">
@@ -834,18 +912,18 @@
         </div>
     </nav>
 
-    <!-- HERO (se mantiene igual, pero se le añade clase reveal a elementos) -->
     <header class="hero-store">
         <div class="hero-content">
             <h1 class="hero-title reveal">Descubre tu<br>Brillo</h1>
             <p class="hero-subtitle reveal">Bienvenida a la temporada de elegancia. Explora nuestra encantadora colección de esmeraldas, diamantes y oro forjados para perdurar.</p>
             <div class="hero-buttons reveal">
-                <button class="btn-white" onclick="window.location.href='customize.html'">ATELIER 3D</button>
-                <button class="btn-outline">EXPLORAR</button>
+                <button class="btn-white" onclick="window.location.href='customize.html'">ATELIER</button>
+                <!-- NUEVO: Botón EXPLORAR abre registro de clientes -->
             </div>
         </div>
 
         <div class="floating-categories">
+            <!-- Se llenará dinámicamente desde Supabase -->
             <a href="#" class="float-card reveal">
                 <div class="float-info">
                     <p>Categoría</p>
@@ -873,15 +951,16 @@
         </div>
     </header>
 
-    <!-- SECCIÓN DESTACADA (con reveal) -->
     <section class="featured-section">
         <div class="featured-text">
             <h2 class="reveal">Diamantes &<br>Anillos de Compromiso</h2>
             <p class="reveal">Experimenta la belleza de la joyería de diamantes y encuentra la pieza perfecta para una ocasión especial. Descubre el diamante perfecto para cualquier aniversario o regalo eterno.</p>
-            <button class="btn-white reveal" style="background: #333; color: #fff;">VER COLECCIÓN</button>
+            <!-- VER COLECCIÓN sigue abriendo el modal de contacto (consultas generales) -->
+            <button class="btn-white reveal" style="background: #333; color: #fff;" onclick="openContactModal(event)">VER COLECCIÓN</button>
         </div>
 
         <div class="featured-carousel">
+            <!-- Productos destacados se cargarán desde Supabase -->
             <div class="card-light reveal" onclick="openModal('Anillo Solitario Real', '$999.00', 'Un espectacular solitario montado en oro blanco de 18 quilates, coronado por un diamante puro de corte brillante que captura la luz desde todos los ángulos.', 'https://images.pexels.com/photos/177332/pexels-photo-177332.jpeg?auto=compress&cs=tinysrgb&w=800')">
                 <span class="badge-sale">SALE</span>
                 <svg class="icon-heart" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -912,7 +991,6 @@
         </div>
     </section>
 
-    <!-- LAYOUT PRINCIPAL DE TIENDA (con reveal en productos) -->
     <main class="store-layout">
 
         <aside class="store-sidebar">
@@ -949,14 +1027,15 @@
                     <p style="color: var(--color-dorado); font-size: 11px; letter-spacing: 3px; margin-bottom: 5px; text-transform: uppercase;">Colección Completa</p>
                     <h1>Nuestras Joyas</h1>
                 </div>
-                <select style="background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 10px 15px; font-family: 'Montserrat'; font-size: 11px; border-radius: 5px; cursor: none;">
-                    <option>Destacados</option>
-                    <option>Precio: Menor a Mayor</option>
-                    <option>Precio: Mayor a Menor</option>
+                <select id="sortSelect" style="background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 10px 15px; font-family: 'Montserrat'; font-size: 11px; border-radius: 5px; cursor: none;">
+                    <option value="default">Destacados</option>
+                    <option value="price-asc">Precio: Menor a Mayor</option>
+                    <option value="price-desc">Precio: Mayor a Menor</option>
                 </select>
             </div>
 
             <div class="products-grid" id="supabase-products">
+                <!-- Productos de respaldo estáticos -->
                 <div class="card-light reveal" onclick="openModal('Anillo Zafiro', '$799.00', 'Un zafiro azul profundo rodeado de detalles en oro amarillo. La elegancia hecha anillo.', 'https://images.pexels.com/photos/1458867/pexels-photo-1458867.jpeg?auto=compress&cs=tinysrgb&w=800')">
                     <span class="badge-sale">SALE</span>
                     <svg class="icon-heart" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -987,7 +1066,7 @@
         </section>
     </main>
 
-    <!-- MODAL QUICK VIEW -->
+    <!-- Modal de producto (existente) -->
     <div class="modal-overlay" id="productModal" onclick="closeModal(event)">
         <div class="modal-content" onclick="event.stopPropagation()">
             <button class="modal-close" onclick="closeModal(event)">&times;</button>
@@ -1019,14 +1098,108 @@
                     </select>
                 </div>
 
-                <button class="btn-modal-add" onclick="openCart(event); closeModal(event);">
+                <button class="btn-modal-add" id="modalAddToCartBtn">
                     AÑADIR A LA BOLSA
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- CARRITO LATERAL -->
+    <!-- ========== MODAL DE CONTACTO (consultas generales) ========== -->
+    <div class="modal-overlay" id="contactModal" onclick="closeContactModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()" style="max-width: 600px; height: auto; max-height: 90vh;">
+            <button class="modal-close" onclick="closeContactModal(event)">&times;</button>
+            <div class="modal-info-col" style="padding: 40px;">
+                <p class="modal-category">ASESORÍA PERSONALIZADA</p>
+                <h2 class="modal-title" style="font-size: 2.5rem;">¿Necesitas ayuda?</h2>
+                <p style="color: #666; font-size: 13px; margin-bottom: 30px;">Déjanos tus datos y te responderemos a la brevedad.</p>
+                
+                <form id="contactForm">
+                    <div class="contact-form-group">
+                        <label>Nombre completo *</label>
+                        <input type="text" id="contactName" required>
+                    </div>
+                    <div class="contact-form-group">
+                        <label>Email *</label>
+                        <input type="email" id="contactEmail" required>
+                    </div>
+                    <div class="contact-form-group">
+                        <label>Teléfono (WhatsApp)</label>
+                        <input type="tel" id="contactPhone" placeholder="+56 9 1234 5678">
+                    </div>
+                    <div class="contact-form-group">
+                        <label>Mensaje</label>
+                        <textarea id="contactMessage" rows="3" placeholder="¿En qué podemos ayudarte?"></textarea>
+                    </div>
+                    <button type="submit" class="btn-contact-send">ENVIAR CONSULTA</button>
+                    <div id="contactSuccessMsg" class="contact-success">✓ Mensaje enviado. Te contactaremos pronto.</div>
+                    <div id="contactErrorMsg" class="contact-error">✗ Error al enviar. Intenta nuevamente.</div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== NUEVO: MODAL DE REGISTRO DE CLIENTES ========== -->
+    <div class="modal-overlay" id="registerModal" onclick="closeRegisterModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()" style="max-width: 650px; height: auto; max-height: 90vh;">
+            <button class="modal-close" onclick="closeRegisterModal(event)">&times;</button>
+            <div class="modal-info-col" style="padding: 40px;">
+                <p class="modal-category">CLUB CLAUDIALE</p>
+                <h2 class="modal-title" style="font-size: 2.5rem;">Regístrate y sé parte</h2>
+                <p style="color: #666; font-size: 13px; margin-bottom: 30px;">Recibe ofertas exclusivas, novedades y atención personalizada.</p>
+                
+                <form id="registerForm">
+                    <div class="contact-form-group">
+                        <label>Nombre completo *</label>
+                        <input type="text" id="regName" required>
+                    </div>
+                    <div class="contact-form-group">
+                        <label>Email *</label>
+                        <input type="email" id="regEmail" required>
+                    </div>
+                    <div class="contact-form-group">
+                        <label>Teléfono (WhatsApp) *</label>
+                        <input type="tel" id="regPhone" required placeholder="+56 9 1234 5678">
+                    </div>
+                    <div class="contact-form-group">
+                        <label>Fecha de nacimiento (opcional)</label>
+                        <input type="date" id="regBirthDate">
+                    </div>
+                    <div class="contact-form-group">
+                        <label>¿Qué tipo de joyas te interesan?</label>
+                        <select id="regInterests" multiple size="3" style="height: auto;">
+                            <option value="Anillos">Anillos</option>
+                            <option value="Alianzas">Alianzas</option>
+                            <option value="Pendientes">Pendientes</option>
+                            <option value="Collares">Collares</option>
+                            <option value="Pulseras">Pulseras</option>
+                        </select>
+                        <small style="color:#888;">(Presiona Ctrl/Cmd para seleccionar múltiples)</small>
+                    </div>
+                    <div class="contact-form-group">
+                        <label>¿Cómo nos conociste?</label>
+                        <select id="regHowFound">
+                            <option value="">Selecciona</option>
+                            <option value="Instagram">Instagram</option>
+                            <option value="Facebook">Facebook</option>
+                            <option value="Google">Google</option>
+                            <option value="Recomendación">Recomendación de un amigo</option>
+                            <option value="Evento">Evento / Feria</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+                    <div class="contact-form-group" style="flex-direction: row; align-items: center; gap: 10px;">
+                        <input type="checkbox" id="regNewsletter" checked style="width: auto;">
+                        <label style="margin:0;">Deseo recibir novedades y promociones especiales</label>
+                    </div>
+                    <button type="submit" class="btn-contact-send">REGISTRARME</button>
+                    <div id="regSuccessMsg" class="contact-success">✓ ¡Registro exitoso! Bienvenido a Claudiale.</div>
+                    <div id="regErrorMsg" class="contact-error">✗ Error al registrar. Intenta nuevamente.</div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
     <div class="cart-drawer" id="cartDrawer">
         <div class="cart-header">
@@ -1048,7 +1221,7 @@
     </div>
 
     <script>
-        // CURSOR (mejorado)
+        // ========== FUNCIONES ORIGINALES (CURSOR, CARRITO, MODAL, REVEAL) ==========
         const cursor = document.getElementById('cursor-custom');
         const dot = document.getElementById('cursor-dot');
         document.addEventListener('mousemove', (e) => {
@@ -1062,7 +1235,6 @@
             });
         });
 
-        // CARRITO
         window.openCart = function (e) {
             if (e) e.preventDefault();
             document.getElementById('cartOverlay').classList.add('active');
@@ -1076,9 +1248,7 @@
             document.body.style.overflow = 'auto';
         };
 
-        // MODAL
         const modal = document.getElementById('productModal');
-
         window.openModal = function (title, price, desc, imgSrc) {
             document.getElementById('modalTitle').innerText = title;
             document.getElementById('modalPrice').innerText = price;
@@ -1093,14 +1263,12 @@
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
         };
-
         window.closeModal = function (e) {
             if (e) e.stopPropagation();
             modal.classList.remove('active');
             document.body.style.overflow = 'auto';
         };
 
-        // REVEAL (nuevo desde index)
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) entry.target.classList.add('active');
@@ -1108,7 +1276,6 @@
         }, { threshold: 0.1 });
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-        // HOVER CURSOR (mejorado con todos los elementos interactivos)
         function updateHoverListeners() {
             const hoverElements = document.querySelectorAll(
                 'a, button, input, select, .card-light, .float-card, .modal-close, .cart-close, .cart-overlay'
@@ -1119,6 +1286,369 @@
             });
         }
         updateHoverListeners();
+
+        // ========== CÓDIGO SUPABASE ORIGINAL ==========
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        let productosDB = [];
+        let categoriasDB = [];
+        let productoActualModal = null;
+
+        async function cargarCategorias() {
+            const { data, error } = await supabaseClient.from('categories').select('*');
+            if (error) return;
+            categoriasDB = data;
+            const contenedor = document.querySelector('.floating-categories');
+            if (contenedor && data.length) {
+                contenedor.innerHTML = data.map(cat => `
+                    <a href="#" class="float-card reveal" onclick="filtrarPorCategoria(${cat.id}); return false;">
+                        <div class="float-info">
+                            <p>Categoría</p>
+                            <h4>${escapeHtml(cat.name)}</h4>
+                            <p>Ver Productos &rarr;</p>
+                        </div>
+                        <img src="${cat.image_url || 'https://images.pexels.com/photos/1458867/pexels-photo-1458867.jpeg?auto=compress&cs=tinysrgb&w=200'}" class="float-img" style="margin-left: auto;">
+                    </a>
+                `).join('');
+                document.querySelectorAll('.floating-categories .reveal').forEach(el => observer.observe(el));
+            }
+        }
+
+        async function cargarProductos() {
+            const { data, error } = await supabaseClient.from('products').select('*, categories(name)');
+            if (error) return;
+            productosDB = data;
+            const destacados = data.filter(p => p.featured === true).slice(0, 2);
+            const carousel = document.querySelector('.featured-carousel');
+            if (carousel && destacados.length) {
+                carousel.innerHTML = destacados.map(p => `
+                    <div class="card-light reveal" onclick="openModalDinamico(${p.id})">
+                        ${p.sale_price ? '<span class="badge-sale">SALE</span>' : '<span class="badge-sale">NUEVO</span>'}
+                        <svg class="icon-heart" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                        </svg>
+                        <img src="${p.image_url}" loading="lazy">
+                        <p style="font-size: 10px; color: #888; margin: 0 0 5px 0;">${p.categories?.name || 'Joya'}</p>
+                        <h3 class="card-light-title">${escapeHtml(p.name)}</h3>
+                        <div class="card-light-bottom">
+                            <div class="card-light-price">$${(p.sale_price || p.price).toFixed(2)}</div>
+                            <button class="btn-cart-dark" onclick="event.stopPropagation(); agregarAlCarrito(${p.id})">Añadir</button>
+                        </div>
+                    </div>
+                `).join('');
+                document.querySelectorAll('.featured-carousel .reveal').forEach(el => observer.observe(el));
+            }
+            const grilla = document.getElementById('supabase-products');
+            if (grilla) {
+                grilla.innerHTML = data.map(p => `
+                    <div class="card-light reveal" onclick="openModalDinamico(${p.id})">
+                        ${p.sale_price ? '<span class="badge-sale">SALE</span>' : ''}
+                        <svg class="icon-heart" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                        </svg>
+                        <img src="${p.image_url}" loading="lazy">
+                        <p style="font-size: 10px; color: #888; margin: 0 0 5px 0;">${p.categories?.name || 'Joya'}</p>
+                        <h3 class="card-light-title">${escapeHtml(p.name)}</h3>
+                        <div class="card-light-bottom">
+                            <div class="card-light-price">$${(p.sale_price || p.price).toFixed(2)} ${p.sale_price ? `<span>$${p.price.toFixed(2)}</span>` : ''}</div>
+                            <button class="btn-cart-dark" onclick="event.stopPropagation(); agregarAlCarrito(${p.id})">Añadir</button>
+                        </div>
+                    </div>
+                `).join('');
+                document.querySelectorAll('#supabase-products .reveal').forEach(el => observer.observe(el));
+            }
+            actualizarFiltrosDinamicos(data);
+        }
+
+        function actualizarFiltrosDinamicos(productos) {
+            const materiales = [...new Set(productos.map(p => p.material).filter(m => m))];
+            const grupos = document.querySelectorAll('.store-sidebar .filter-group');
+            if (grupos[0] && grupos[0].querySelector('.filter-title')?.innerText === 'Categorías') {
+                const ul = grupos[0].querySelector('.filter-list');
+                if (ul && categoriasDB.length) {
+                    ul.innerHTML = `<li><label><input type="checkbox" class="filtro-cat" value="all" checked> Todos</label></li>` +
+                        categoriasDB.map(cat => `<li><label><input type="checkbox" class="filtro-cat" value="${cat.id}"> ${escapeHtml(cat.name)}</label></li>`).join('');
+                }
+            }
+            if (grupos[1] && grupos[1].querySelector('.filter-title')?.innerText === 'Material') {
+                const ul = grupos[1].querySelector('.filter-list');
+                if (ul) {
+                    ul.innerHTML = materiales.map(mat => `<li><label><input type="checkbox" class="filtro-mat" value="${escapeHtml(mat)}"> ${escapeHtml(mat)}</label></li>`).join('');
+                }
+            }
+        }
+
+        function aplicarFiltros() {
+            let filtrados = [...productosDB];
+            const catsSeleccionadas = Array.from(document.querySelectorAll('.filtro-cat:checked')).map(cb => cb.value);
+            if (!catsSeleccionadas.includes('all') && catsSeleccionadas.length) {
+                filtrados = filtrados.filter(p => catsSeleccionadas.includes(String(p.category_id)));
+            }
+            const matsSeleccionados = Array.from(document.querySelectorAll('.filtro-mat:checked')).map(cb => cb.value);
+            if (matsSeleccionados.length) {
+                filtrados = filtrados.filter(p => matsSeleccionados.includes(p.material));
+            }
+            const rangosPrecio = Array.from(document.querySelectorAll('.filter-group:last-child .filter-list input[type="checkbox"]')).filter(cb => cb.checked).map(cb => cb.closest('label').innerText);
+            if (rangosPrecio.length) {
+                filtrados = filtrados.filter(p => {
+                    const precio = p.sale_price || p.price;
+                    return rangosPrecio.some(rango => {
+                        if (rango.includes('Menos de $1,000')) return precio < 1000;
+                        if (rango.includes('$1,000 - $3,000')) return precio >= 1000 && precio <= 3000;
+                        if (rango.includes('Más de $3,000')) return precio > 3000;
+                        return false;
+                    });
+                });
+            }
+            const orden = document.getElementById('sortSelect').value;
+            if (orden === 'price-asc') filtrados.sort((a,b) => (a.sale_price||a.price) - (b.sale_price||b.price));
+            if (orden === 'price-desc') filtrados.sort((a,b) => (b.sale_price||b.price) - (a.sale_price||a.price));
+            const grilla = document.getElementById('supabase-products');
+            if (grilla) {
+                grilla.innerHTML = filtrados.map(p => `
+                    <div class="card-light reveal" onclick="openModalDinamico(${p.id})">
+                        ${p.sale_price ? '<span class="badge-sale">SALE</span>' : ''}
+                        <svg class="icon-heart" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                        </svg>
+                        <img src="${p.image_url}" loading="lazy">
+                        <p style="font-size: 10px; color: #888; margin: 0 0 5px 0;">${p.categories?.name || 'Joya'}</p>
+                        <h3 class="card-light-title">${escapeHtml(p.name)}</h3>
+                        <div class="card-light-bottom">
+                            <div class="card-light-price">$${(p.sale_price || p.price).toFixed(2)} ${p.sale_price ? `<span>$${p.price.toFixed(2)}</span>` : ''}</div>
+                            <button class="btn-cart-dark" onclick="event.stopPropagation(); agregarAlCarrito(${p.id})">Añadir</button>
+                        </div>
+                    </div>
+                `).join('');
+                document.querySelectorAll('#supabase-products .reveal').forEach(el => observer.observe(el));
+            }
+        }
+
+        window.openModalDinamico = function(productId) {
+            const producto = productosDB.find(p => p.id === productId);
+            if (!producto) return;
+            productoActualModal = producto;
+            const precio = (producto.sale_price || producto.price).toFixed(2);
+            document.getElementById('modalTitle').innerText = producto.name;
+            document.getElementById('modalPrice').innerText = `$${precio}`;
+            const descEl = document.getElementById('modalDesc');
+            if (producto.description && producto.description.trim()) {
+                descEl.innerText = producto.description;
+                descEl.style.display = 'block';
+            } else {
+                descEl.style.display = 'none';
+            }
+            document.getElementById('modalImage').src = producto.image_url;
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        };
+
+        document.getElementById('modalAddToCartBtn').onclick = function() {
+            if (productoActualModal) {
+                agregarAlCarrito(productoActualModal.id);
+                closeModal();
+                openCart();
+            }
+        };
+
+        let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+        function actualizarCarritoUI() {
+            const cartBody = document.getElementById('cartBody');
+            const cartCountSpan = document.getElementById('cart-count');
+            const totalSpan = document.querySelector('.cart-total span:last-child');
+            let total = 0, count = 0;
+            if (!carrito.length) {
+                cartBody.innerHTML = '<div class="cart-empty">Tu bolsa de compras está vacía.</div>';
+                totalSpan.innerText = '$0.00';
+                cartCountSpan.innerText = '0';
+                return;
+            }
+            cartBody.innerHTML = carrito.map((item, idx) => {
+                total += item.price * item.quantity;
+                count += item.quantity;
+                return `
+                    <div style="display:flex; gap:15px; margin-bottom:20px; border-bottom:1px solid #222; padding-bottom:15px;">
+                        <img src="${item.image}" width="60" height="60" style="object-fit:cover; border-radius:8px;">
+                        <div style="flex:1">
+                            <h4 style="margin:0 0 5px;">${escapeHtml(item.name)}</h4>
+                            <p style="margin:0; color:#d4af37;">$${item.price.toFixed(2)} x ${item.quantity}</p>
+                            <button onclick="eliminarDelCarrito(${idx})" style="background:none; border:none; color:#aaa; font-size:11px; cursor:pointer;">Eliminar</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            totalSpan.innerText = `$${total.toFixed(2)}`;
+            cartCountSpan.innerText = count;
+            localStorage.setItem('carrito', JSON.stringify(carrito));
+        }
+        window.agregarAlCarrito = function(productId) {
+            const producto = productosDB.find(p => p.id === productId);
+            if (!producto) return;
+            const existente = carrito.find(i => i.id === productId);
+            if (existente) existente.quantity++;
+            else carrito.push({
+                id: producto.id,
+                name: producto.name,
+                price: producto.sale_price || producto.price,
+                image: producto.image_url,
+                quantity: 1
+            });
+            actualizarCarritoUI();
+            const btn = event?.target;
+            if (btn && btn.classList && btn.classList.contains('btn-cart-dark')) {
+                btn.innerText = '✓ Añadido';
+                setTimeout(() => btn.innerText = 'Añadir', 800);
+            }
+        };
+        window.eliminarDelCarrito = function(idx) {
+            carrito.splice(idx, 1);
+            actualizarCarritoUI();
+            if (!carrito.length) closeCart();
+        };
+        window.filtrarPorCategoria = function(catId) {
+            const checkAll = document.querySelector('.filtro-cat[value="all"]');
+            if (checkAll) checkAll.checked = false;
+            const checkCat = document.querySelector(`.filtro-cat[value="${catId}"]`);
+            if (checkCat) checkCat.checked = true;
+            aplicarFiltros();
+            document.querySelector('.store-main').scrollIntoView({ behavior: 'smooth' });
+        };
+
+        function inicializarEventos() {
+            const selectOrden = document.getElementById('sortSelect');
+            if (selectOrden) selectOrden.addEventListener('change', aplicarFiltros);
+            document.addEventListener('change', (e) => {
+                if (e.target.classList && (e.target.classList.contains('filtro-cat') || e.target.classList.contains('filtro-mat'))) {
+                    aplicarFiltros();
+                }
+            });
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+
+        (async function init() {
+            await cargarCategorias();
+            await cargarProductos();
+            actualizarCarritoUI();
+            inicializarEventos();
+        })();
+
+        // ========== FUNCIONES MODAL DE CONTACTO (consultas) ==========
+        const contactModalEl = document.getElementById('contactModal');
+        const contactForm = document.getElementById('contactForm');
+        const contactSuccess = document.getElementById('contactSuccessMsg');
+        const contactError = document.getElementById('contactErrorMsg');
+
+        window.openContactModal = function(event) {
+            if (event) event.preventDefault();
+            contactModalEl.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            contactSuccess.style.display = 'none';
+            contactError.style.display = 'none';
+        };
+
+        window.closeContactModal = function(event) {
+            if (event) event.stopPropagation();
+            contactModalEl.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        };
+
+        contactForm.onsubmit = async function(e) {
+            e.preventDefault();
+            const name = document.getElementById('contactName').value.trim();
+            const email = document.getElementById('contactEmail').value.trim();
+            const phone = document.getElementById('contactPhone').value.trim();
+            const message = document.getElementById('contactMessage').value.trim();
+
+            if (!name || !email) {
+                contactError.innerText = 'Por favor completa nombre y email.';
+                contactError.style.display = 'block';
+                setTimeout(() => contactError.style.display = 'none', 3000);
+                return;
+            }
+
+            const { error } = await supabaseClient.from('messages').insert([
+                { name, email, phone, subject: 'Consulta general', message, status: 'no_leido' }
+            ]);
+
+            if (error) {
+                console.error(error);
+                contactError.innerText = 'Error al enviar. Intenta más tarde.';
+                contactError.style.display = 'block';
+                setTimeout(() => contactError.style.display = 'none', 3000);
+            } else {
+                contactSuccess.style.display = 'block';
+                contactForm.reset();
+                setTimeout(() => {
+                    contactSuccess.style.display = 'none';
+                    closeContactModal();
+                }, 2000);
+            }
+        };
+
+        // ========== NUEVAS FUNCIONES PARA REGISTRO DE CLIENTES ==========
+        const registerModalEl = document.getElementById('registerModal');
+        const registerForm = document.getElementById('registerForm');
+        const regSuccess = document.getElementById('regSuccessMsg');
+        const regError = document.getElementById('regErrorMsg');
+
+        window.openRegisterModal = function(event) {
+            if (event) event.preventDefault();
+            registerModalEl.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            regSuccess.style.display = 'none';
+            regError.style.display = 'none';
+        };
+
+        window.closeRegisterModal = function(event) {
+            if (event) event.stopPropagation();
+            registerModalEl.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        };
+
+        registerForm.onsubmit = async function(e) {
+            e.preventDefault();
+            const name = document.getElementById('regName').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const phone = document.getElementById('regPhone').value.trim();
+            const birthDate = document.getElementById('regBirthDate').value || null;
+            const interestsSelect = document.getElementById('regInterests');
+            const interests = Array.from(interestsSelect.selectedOptions).map(opt => opt.value);
+            const howFound = document.getElementById('regHowFound').value;
+            const newsletter = document.getElementById('regNewsletter').checked;
+
+            if (!name || !email || !phone) {
+                regError.innerText = 'Por favor completa nombre, email y teléfono.';
+                regError.style.display = 'block';
+                setTimeout(() => regError.style.display = 'none', 3000);
+                return;
+            }
+
+            const { error } = await supabaseClient.from('customers').insert([
+                { name, email, phone, birth_date: birthDate, interests, how_found: howFound, newsletter, status: 'activo' }
+            ]);
+
+            if (error) {
+                console.error(error);
+                regError.innerText = 'Error al registrar. Intenta más tarde.';
+                regError.style.display = 'block';
+                setTimeout(() => regError.style.display = 'none', 3000);
+            } else {
+                regSuccess.style.display = 'block';
+                registerForm.reset();
+                setTimeout(() => {
+                    regSuccess.style.display = 'none';
+                    closeRegisterModal();
+                }, 2000);
+            }
+        };
     </script>
 </body>
 </html>

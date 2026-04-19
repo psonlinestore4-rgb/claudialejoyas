@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Claudiale Joyas | Alta Joyería</title>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Montserrat:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:,">
     <style>
         :root {
             --color-dorado: #d4af37;
@@ -54,11 +55,11 @@
             border: 0.5px solid var(--color-dorado) !important;
         }
 
-        html, body, a, button, select, input, .categoria-item, .tarjeta-vertical, .btn-outline, .ig-item, .contacto-info {
+        html, body, a, button, select, input, .categoria-item, .tarjeta-vertical, .btn-outline, .ig-item, .contacto-info, .card-coleccion {
             cursor: none !important;
         }
 
-        /* --- NAVBAR (estilo store) --- */
+        /* --- NAVBAR --- */
         .navbar {
             position: fixed;
             width: 100%;
@@ -116,7 +117,7 @@
             color: var(--color-dorado);
         }
 
-        /* --- HERO con video (estructura store) --- */
+        /* --- HERO --- */
         .hero-store {
             position: relative;
             height: 90vh;
@@ -193,7 +194,7 @@
             margin: 0 auto;
         }
 
-        /* --- CATEGORÍAS CON ICONOS (index original) --- */
+        /* --- CATEGORÍAS CON ICONOS --- */
         .categoria-item {
             display: flex;
             flex-direction: column;
@@ -224,7 +225,7 @@
             box-shadow: 0 0 20px rgba(212, 175, 55, 0.15);
         }
 
-        /* --- TARJETAS VERTICALES (index original) --- */
+        /* --- TARJETAS VERTICALES --- */
         .grid-vertical {
             display: flex;
             justify-content: space-between;
@@ -291,7 +292,82 @@
             color: #000;
         }
 
-        /* --- SECCIÓN CARACTERÍSTICAS (index original) --- */
+        /* --- NUEVA SECCIÓN: COLECCIONES DINÁMICAS --- */
+        .grid-colecciones {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+        .card-coleccion {
+            cursor: none;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .img-wrapper {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+        .img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .card-coleccion:hover .img-wrapper img {
+            transform: scale(1.05);
+        }
+        .card-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 50%);
+            opacity: 0.5;
+            transition: opacity 0.3s;
+        }
+        .card-coleccion:hover .card-overlay {
+            opacity: 0.8;
+        }
+        .info-coleccion {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .info-coleccion h3 {
+            font-family: 'Cormorant Garamond';
+            font-size: 2.2rem;
+            color: #fff;
+            margin: 0 0 5px 0;
+            font-weight: 400;
+            transition: color 0.3s;
+        }
+        .card-coleccion:hover .info-coleccion h3 {
+            color: var(--color-dorado);
+        }
+        .info-coleccion p {
+            font-family: 'Montserrat';
+            font-size: 12px;
+            color: rgba(255,255,255,0.6);
+            margin: 0 0 15px 0;
+        }
+        .btn-link {
+            font-family: 'Montserrat';
+            font-size: 10px;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-bottom: 1px solid var(--color-dorado);
+            padding-bottom: 5px;
+            transition: color 0.3s;
+        }
+        .card-coleccion:hover .btn-link {
+            color: var(--color-dorado);
+        }
+
+        /* --- SECCIÓN CARACTERÍSTICAS --- */
         .feature-block {
             display: flex;
             flex-direction: column;
@@ -320,7 +396,28 @@
             font-weight: 300;
         }
 
-        /* --- CARRUSEL INSTAGRAM (index original) --- */
+        /* --- SECCIÓN 3D BLINDADA CONTRA BUGS --- */
+        .section-3d-wrapper {
+            background-color: #050505; 
+            position: relative; 
+            height: 100vh; 
+            width: 100%; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            overflow: hidden; 
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+        #canvas-container {
+            background-color: #050505;
+        }
+        #canvas-container canvas {
+            display: block;
+            outline: none;
+        }
+
+        /* --- CARRUSEL INSTAGRAM --- */
         .ig-track {
             display: flex;
             gap: 2vw;
@@ -372,7 +469,7 @@
             opacity: 1;
         }
 
-        /* --- FOOTER PREMIUM (index original) --- */
+        /* --- FOOTER PREMIUM --- */
         .footer-newsletter {
             text-align: center;
             border-bottom: 1px solid rgba(255,255,255,0.1);
@@ -472,7 +569,7 @@
             border-color: var(--color-dorado);
         }
 
-        /* --- MODAL QUICK VIEW (de store) --- */
+        /* --- MODAL QUICK VIEW --- */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -640,7 +737,7 @@
             background: var(--color-dorado);
         }
 
-        /* --- SIDEBAR CARRITO (de store) --- */
+        /* --- SIDEBAR CARRITO --- */
         .cart-overlay {
             position: fixed;
             top: 0;
@@ -665,20 +762,22 @@
         .cart-drawer {
             position: fixed;
             top: 0;
-            right: -500px;
+            bottom: 0;
+            right: 0;
             width: 100%;
             max-width: 450px;
-            height: 100vh;
             background: #050505;
             z-index: 2001;
-            transition: right 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             border-left: 1px solid rgba(255, 255, 255, 0.05);
             display: flex;
             flex-direction: column;
+            box-sizing: border-box;
         }
 
         .cart-drawer.active {
-            right: 0;
+            transform: translateX(0);
         }
 
         .cart-header {
@@ -687,14 +786,16 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            box-sizing: border-box;
         }
 
         .cart-header h2 {
-            font-family: 'Cormorant Garamond';
-            font-size: 2rem;
-            font-weight: 300;
-            margin: 0;
-            color: #fff;
+            font-family: 'Cormorant Garamond', serif !important;
+            font-size: 2.2rem !important;
+            font-weight: 300 !important;
+            margin: 0 !important;
+            color: #fff !important;
+            line-height: 1.2 !important;
         }
 
         .cart-close {
@@ -705,6 +806,7 @@
             cursor: none;
             transition: 0.3s;
             line-height: 1;
+            padding: 0;
         }
 
         .cart-close:hover {
@@ -719,42 +821,47 @@
             display: flex;
             flex-direction: column;
             gap: 20px;
+            box-sizing: border-box;
         }
 
         .cart-empty {
             text-align: center;
-            color: rgba(255, 255, 255, 0.4);
-            font-family: 'Montserrat';
-            font-size: 12px;
-            margin-top: 50px;
+            color: rgba(255, 255, 255, 0.6) !important;
+            font-family: 'Montserrat', sans-serif !important;
+            font-size: 14px !important;
+            margin-top: 50px !important;
+            line-height: 1.5 !important;
         }
 
         .cart-footer {
             padding: 30px;
             border-top: 1px solid rgba(255, 255, 255, 0.05);
             background: #000;
+            box-sizing: border-box;
         }
 
         .cart-total {
             display: flex;
             justify-content: space-between;
-            font-family: 'Montserrat';
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 20px;
-            color: #fff;
+            align-items: center;
+            font-family: 'Montserrat', sans-serif !important;
+            font-size: 16px !important;
+            font-weight: 600 !important;
+            margin-bottom: 20px !important;
+            color: #fff !important;
+            line-height: 1.2 !important;
         }
 
         .btn-checkout {
             width: 100%;
             background: #fff;
-            color: #000;
+            color: #000 !important;
             border: none;
             padding: 18px;
             border-radius: 8px;
-            font-family: 'Montserrat';
-            font-size: 11px;
-            font-weight: 600;
+            font-family: 'Montserrat', sans-serif !important;
+            font-size: 12px !important;
+            font-weight: 600 !important;
             letter-spacing: 2px;
             text-transform: uppercase;
             cursor: none;
@@ -762,14 +869,16 @@
             text-align: center;
             display: block;
             text-decoration: none;
+            line-height: 1.5 !important;
+            box-sizing: border-box;
         }
 
         .btn-checkout:hover {
             background: var(--color-dorado);
-            color: #fff;
+            color: #fff !important;
         }
 
-        /* --- ANIMACIONES REVEAL (del index original) --- */
+        /* --- ANIMACIONES REVEAL --- */
         .reveal {
             opacity: 0;
             transform: translateY(30px);
@@ -780,6 +889,96 @@
             opacity: 1;
             transform: translateY(0);
         }
+
+        /* ===== MEJORA ESTÉTICA DE LA BARRA DE BÚSQUEDA (ESTILO DE LA IMAGEN) ===== */
+        .search-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            background: rgba(20, 20, 20, 0.7);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 50px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(212, 175, 55, 0.1) inset;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .search-wrapper:hover, .search-wrapper:focus-within {
+            border-color: var(--color-dorado);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), 0 0 15px rgba(212, 175, 55, 0.2), 0 0 0 1px var(--color-dorado) inset;
+            background: rgba(30, 30, 30, 0.8);
+        }
+
+        .search-icon-svg {
+            position: absolute;
+            left: 28px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--color-dorado);
+            width: 26px;
+            height: 26px;
+            z-index: 2;
+            pointer-events: none;
+            opacity: 0.9;
+            filter: drop-shadow(0 0 6px rgba(212, 175, 55, 0.4));
+            transition: all 0.3s;
+        }
+
+        .search-wrapper:hover .search-icon-svg, .search-wrapper:focus-within .search-icon-svg {
+            opacity: 1;
+            filter: drop-shadow(0 0 10px var(--color-dorado));
+        }
+
+        #typing-search {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 25px 20px 25px 70px;
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 16px;
+            outline: none;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+        }
+
+        #typing-search::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 300;
+            transition: color 0.3s;
+        }
+
+        #search-btn {
+            background: linear-gradient(145deg, #e6c34a, var(--color-dorado));
+            color: #000;
+            border: none;
+            border-radius: 40px;
+            padding: 0 40px; /* Ajuste para centrar el texto verticalmente */
+            margin: 6px 6px 6px 0; /* Margen para separarlo del borde del input contenedor */
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+        }
+
+        #search-btn:hover {
+            background: linear-gradient(145deg, #f5d654, #e6c34a);
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.5);
+            transform: scale(1.02);
+            letter-spacing: 4px;
+        }
+
+        #search-btn:active {
+            transform: scale(0.98);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        }
     </style>
 </head>
 <body>
@@ -787,11 +986,10 @@
     <div id="cursor-custom"></div>
     <div id="cursor-dot"></div>
 
-    <!-- NAVBAR (estilo store) -->
     <nav class="navbar">
         <div class="navbar-container">
             <div class="navbar-side navbar-left">
-                <a href="aboutus.html" class="nav-link">Conocenos</a>
+                <a href="aboutus2.html" class="nav-link">Conocenos</a>
                 <a href="store.html" class="nav-link">Tienda</a>
             </div>
 
@@ -812,10 +1010,9 @@
         </div>
     </nav>
 
-    <!-- HERO con video -->
     <header class="hero-store">
         <video autoplay muted loop playsinline class="video-background">
-            <source src="https://cdn.pixabay.com/video/2020/02/24/32766-393937126_large.mp4" type="video/mp4">
+            <source src="assets/videos/hero.mp4" type="video/mp4">
         </video>
         <div class="hero-content">
             <p class="hero-subtitle reveal" style="color: var(--color-dorado); margin-bottom: 15px;">— ALTA JOYERÍA</p>
@@ -827,7 +1024,6 @@
     </header>
 
     <main>
-        <!-- CATEGORÍAS CON ICONOS -->
         <section style="background: #0a0a0a; padding: 100px 0;">
             <div class="seccion-padding reveal" style="display: flex; justify-content: center; gap: 6vw; flex-wrap: wrap; padding-top: 0; padding-bottom: 0;">
                 <div class="categoria-item" onclick="window.location.href='store.html'">
@@ -881,39 +1077,91 @@
             </div>
         </section>
 
-        <!-- TARJETAS VERTICALES -->
         <section style="background: #000;">
             <div class="seccion-padding">
                 <div class="grid-vertical reveal">
-                    <div class="tarjeta-vertical" onclick="openModal('Colección Oro 18k', '$2,500.00', 'Piezas forjadas para la eternidad.', 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=800')">
-                        <img src="https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=800" class="tarjeta-img">
+                    <div class="tarjeta-vertical" onclick="openModal('Colección Oro 18k', '$2,500.00', 'Piezas forjadas para la eternidad.', 'assets/images/foto1.jpg')">
+                        <img src="assets/images/foto1.jpg" class="tarjeta-img" alt="Oro 18k">
                         <div class="tarjeta-overlay"></div>
                         <h2 style="color:#fff; font-family:'Cormorant Garamond'; font-size:2.5rem; letter-spacing:3px;">Oro 18k</h2>
                         <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='10' viewBox='0 0 60 10'><polyline points='0,5 5,0 15,10 25,0 35,10 45,0 55,10 60,5' fill='none' stroke='white' stroke-width='1'/></svg>" class="zigzag-line">
                         <p style="color:#aaa; font-family:'Montserrat'; font-size:12px; margin-bottom:20px;">Piezas forjadas para la eternidad.</p>
-                        <a href="javascript:void(0)" class="btn-outline" onclick="event.stopPropagation(); openModal('Colección Oro 18k', '$2,500.00', 'Piezas forjadas para la eternidad.', 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=800')">Explorar</a>
+                        <a href="javascript:void(0)" class="btn-outline" onclick="event.stopPropagation(); openModal('Colección Oro 18k', '$2,500.00', 'Piezas forjadas para la eternidad.', 'assets/images/foto1.jpg')">Explorar</a>
                     </div>
-                    <div class="tarjeta-vertical" style="transform: translateY(40px);" onclick="openModal('Colección Diamantes', '$3,999.00', 'Pureza y brillo inigualable.', 'https://images.unsplash.com/photo-1605100804763-247f6612d540?q=80&w=800')">
-                        <img src="https://images.unsplash.com/photo-1605100804763-247f6612d540?q=80&w=800" class="tarjeta-img">
+                    <div class="tarjeta-vertical" style="transform: translateY(40px);" onclick="openModal('Colección Diamantes', '$3,999.00', 'Pureza y brillo inigualable.', 'assets/images/foto2.jpg')">
+                        <img src="assets/images/foto2.jpg" class="tarjeta-img" alt="Diamantes">
                         <div class="tarjeta-overlay"></div>
                         <h2 style="color:#fff; font-family:'Cormorant Garamond'; font-size:2.5rem; letter-spacing:3px;">Diamantes</h2>
                         <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='10' viewBox='0 0 60 10'><polyline points='0,5 5,0 15,10 25,0 35,10 45,0 55,10 60,5' fill='none' stroke='white' stroke-width='1'/></svg>" class="zigzag-line">
                         <p style="color:#aaa; font-family:'Montserrat'; font-size:12px; margin-bottom:20px;">Pureza y brillo inigualable.</p>
-                        <a href="javascript:void(0)" class="btn-outline" onclick="event.stopPropagation(); openModal('Colección Diamantes', '$3,999.00', 'Pureza y brillo inigualable.', 'https://images.unsplash.com/photo-1605100804763-247f6612d540?q=80&w=800')">Explorar</a>
+                        <a href="javascript:void(0)" class="btn-outline" onclick="event.stopPropagation(); openModal('Colección Diamantes', '$3,999.00', 'Pureza y brillo inigualable.', 'assets/images/foto2.jpg')">Explorar</a>
                     </div>
-                    <div class="tarjeta-vertical" onclick="openModal('Colección Platino', '$5,200.00', 'La nobleza suprema del metal.', 'https://images.unsplash.com/photo-1599643478514-4a410f062f68?q=80&w=800')">
-                        <img src="https://images.unsplash.com/photo-1599643478514-4a410f062f68?q=80&w=800" class="tarjeta-img">
+                    <div class="tarjeta-vertical" onclick="openModal('Colección Platino', '$5,200.00', 'La nobleza suprema del metal.', 'assets/images/foto3.jpg')">
+                        <img src="assets/images/foto3.jpg" class="tarjeta-img" alt="Platino">
                         <div class="tarjeta-overlay"></div>
                         <h2 style="color:#fff; font-family:'Cormorant Garamond'; font-size:2.5rem; letter-spacing:3px;">Platino</h2>
                         <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='10' viewBox='0 0 60 10'><polyline points='0,5 5,0 15,10 25,0 35,10 45,0 55,10 60,5' fill='none' stroke='white' stroke-width='1'/></svg>" class="zigzag-line">
                         <p style="color:#aaa; font-family:'Montserrat'; font-size:12px; margin-bottom:20px;">La nobleza suprema del metal.</p>
-                        <a href="javascript:void(0)" class="btn-outline" onclick="event.stopPropagation(); openModal('Colección Platino', '$5,200.00', 'La nobleza suprema del metal.', 'https://images.unsplash.com/photo-1599643478514-4a410f062f68?q=80&w=800')">Explorar</a>
+                        <a href="javascript:void(0)" class="btn-outline" onclick="event.stopPropagation(); openModal('Colección Platino', '$5,200.00', 'La nobleza suprema del metal.', 'assets/images/foto3.jpg')">Explorar</a>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- SECCIÓN CARACTERÍSTICAS -->
+        <section style="background: #050505; border-top: 1px solid rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.05);">
+            <div class="seccion-padding">
+                
+                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 60px;" class="reveal">
+                    <div>
+                        <p style="color: var(--color-dorado); font-family: 'Montserrat'; font-size: 11px; letter-spacing: 5px; margin-bottom: 15px;">LO ÚLTIMO DEL ATELIER</p>
+                        <h2 style="font-family: 'Cormorant Garamond'; color: #fff; font-size: 3.5rem; font-weight: 300; margin: 0; text-transform: uppercase;">Nuevas Colecciones</h2>
+                    </div>
+                    <a href="store.html" class="btn-outline" style="margin: 0;">Ver Catálogo Completo</a>
+                </div>
+
+                <div class="grid-colecciones reveal" id="contenedor-colecciones">
+                    
+                    <div class="card-coleccion" onclick="window.location.href='store.html'">
+                        <div class="img-wrapper">
+                            <img src="assets/images/col1.jpg" alt="Colección Eterna">
+                            <div class="card-overlay"></div>
+                        </div>
+                        <div class="info-coleccion">
+                            <h3>Colección Eterna</h3>
+                            <p>Anillos de compromiso 2026</p>
+                            <span class="btn-link">Descubrir</span>
+                        </div>
+                    </div>
+
+                    <div class="card-coleccion" onclick="window.location.href='store.html'">
+                        <div class="img-wrapper">
+                            <img src="assets/images/col2.jpg" alt="Colección Imperial">
+                            <div class="card-overlay"></div>
+                        </div>
+                        <div class="info-coleccion">
+                            <h3>Colección Imperial</h3>
+                            <p>Esmeraldas y Oro Blanco</p>
+                            <span class="btn-link">Descubrir</span>
+                        </div>
+                    </div>
+
+                    <div class="card-coleccion" onclick="window.location.href='store.html'">
+                        <div class="img-wrapper">
+                            <img src="assets/images/col3.jpg" alt="Colección Minimalista">
+                            <div class="card-overlay"></div>
+                        </div>
+                        <div class="info-coleccion">
+                            <h3>Línea Minimalista</h3>
+                            <p>Elegancia para el día a día</p>
+                            <span class="btn-link">Descubrir</span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
         <section style="background: #0a0a0a;">
             <div class="seccion-padding" style="display: flex; flex-direction: column; align-items: center;">
                 <p class="reveal" style="color: var(--color-dorado); font-family: 'Montserrat'; font-size: 11px; letter-spacing: 5px; margin-bottom: 15px;">INNOVACIÓN ABSOLUTA</p>
@@ -925,7 +1173,7 @@
                         <div class="feature-item"><h3>02</h3><h4>MATERIALES PREMIUM</h4><p>Selección de los metales y gemas más exclusivos para asegurar un brillo excepcional.</p></div>
                     </div>
                     <div style="flex: 1.5; text-align: center;">
-                        <img src="https://images.unsplash.com/photo-1596944924616-7b38e7cfac36?q=80&w=1000" style="width: 100%; max-width: 450px; border-radius: 8px; box-shadow: 0 40px 80px rgba(0,0,0,0.8);">
+                        <img src="assets/images/feature-img.jpg" style="width: 100%; max-width: 450px; border-radius: 8px; box-shadow: 0 40px 80px rgba(0,0,0,0.8);" alt="Joyería Artesanal">
                     </div>
                     <div class="feature-block" style="flex: 1; text-align: left;">
                         <div class="feature-item"><h3>03</h3><h4>ACABADO ARTESANAL</h4><p>Cada detalle es minuciosamente pulido a mano por nuestros maestros joyeros.</p></div>
@@ -935,7 +1183,27 @@
             </div>
         </section>
 
-        <!-- INSTAGRAM CARRUSEL -->
+        <section class="section-3d-wrapper">
+            <div style="position: absolute; top: 10%; z-index: 10; text-align: center; pointer-events: none;">
+                <p class="reveal" style="color: var(--color-dorado); font-family: 'Montserrat'; font-size: 11px; letter-spacing: 4px; margin-bottom: 10px;">EXPERIENCIA INMERSIVA</p>
+                <h2 class="reveal" style="font-family: 'Cormorant Garamond'; color: #fff; font-size: 3.5rem; font-weight: 300; margin: 0; letter-spacing: 2px;">Nuestra Obra Maestra</h2>
+            </div>
+            
+            <div id="canvas-container" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;"></div>
+        </section>
+
+        <section style="background: #050505; padding: 60px 8vw 100px 8vw; display: flex; justify-content: center; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05);">
+            <div class="reveal search-wrapper">
+                <svg class="search-icon-svg" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M16.65 16.65A7.5 7.5 0 1116.65 1.65a7.5 7.5 0 010 15z"></path>
+                </svg>
+                
+                <input type="text" id="typing-search" readonly placeholder="">
+                
+                <button id="search-btn">Buscar</button>
+            </div>
+        </section>
+
         <section style="background: #000; overflow: hidden;">
             <div class="seccion-padding" style="padding-bottom: 40px; text-align: center;">
                 <p class="reveal" style="color: var(--color-dorado); font-family: 'Montserrat'; font-size: 11px; letter-spacing: 4px; margin-bottom: 15px;">SÍGUENOS</p>
@@ -944,32 +1212,16 @@
             
             <div class="reveal" style="max-width: 1800px; margin: 0 auto; padding: 0 8vw 100px 8vw;">
                 <div class="ig-track">
-                    <a href="#" class="ig-item">
-                        <img src="https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?q=80&w=800">
-                        <div class="ig-overlay"><span>VER EN INSTAGRAM</span></div>
-                    </a>
-                    <a href="#" class="ig-item">
-                        <img src="https://images.unsplash.com/photo-1599643477877-530eb83abc8e?q=80&w=800">
-                        <div class="ig-overlay"><span>VER EN INSTAGRAM</span></div>
-                    </a>
-                    <a href="#" class="ig-item">
-                        <img src="https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=800">
-                        <div class="ig-overlay"><span>VER EN INSTAGRAM</span></div>
-                    </a>
-                    <a href="#" class="ig-item">
-                        <img src="https://images.unsplash.com/photo-1584302179602-e4c3d3fd629d?q=80&w=800">
-                        <div class="ig-overlay"><span>VER EN INSTAGRAM</span></div>
-                    </a>
-                    <a href="#" class="ig-item">
-                        <img src="https://images.unsplash.com/photo-1596944924616-7b38e7cfac36?q=80&w=800">
-                        <div class="ig-overlay"><span>VER EN INSTAGRAM</span></div>
-                    </a>
+                    <a href="#" class="ig-item"><img src="assets/images/ig1.jpg" alt="Instagram 1"><div class="ig-overlay"><span>VER EN INSTAGRAM</span></div></a>
+                    <a href="#" class="ig-item"><img src="assets/images/ig2.jpg" alt="Instagram 2"><div class="ig-overlay"><span>VER EN INSTAGRAM</span></div></a>
+                    <a href="#" class="ig-item"><img src="assets/images/ig3.jpg" alt="Instagram 3"><div class="ig-overlay"><span>VER EN INSTAGRAM</span></div></a>
+                    <a href="#" class="ig-item"><img src="assets/images/ig4.jpg" alt="Instagram 4"><div class="ig-overlay"><span>VER EN INSTAGRAM</span></div></a>
+                    <a href="#" class="ig-item"><img src="assets/images/ig5.jpg" alt="Instagram 5"><div class="ig-overlay"><span>VER EN INSTAGRAM</span></div></a>
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- FOOTER -->
     <footer style="background: #0a0a0a;">
         <div class="seccion-padding" style="padding-bottom: 60px; padding-top: 100px;">
             
@@ -997,8 +1249,8 @@
                     <h4>Enlaces Útiles</h4>
                     <ul>
                         <li><a href="index.html">Inicio</a></li>
-                        <li><a href="aboutus.html">Nosotros</a></li>
-                        <li><a href="store.html">Boutique 3D</a></li>
+                        <li><a href="aboutus2.html">Conocenos</a></li>
+                        <li><a href="store.html">Tienda</a></li>
                     </ul>
                 </div>
 
@@ -1014,19 +1266,18 @@
                 <div class="footer-col">
                     <h4>Contacto</h4>
                     <ul>
-                        <li style="color: rgba(255,255,255,0.6); font-family: 'Montserrat'; font-size: 12px; margin-bottom: 10px;">+58 412 123 4567</li>
+                        <li style="color: rgba(255,255,255,0.6); font-family: 'Montserrat'; font-size: 12px; margin-bottom: 10px;">+58 414 409 9407</li>
                         <li style="color: rgba(255,255,255,0.6); font-family: 'Montserrat'; font-size: 12px; margin-bottom: 10px;">INFO@CLAUDIALE.COM</li>
                     </ul>
                 </div>
             </div>
             
             <div style="text-align: center; margin-top: 80px; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.05);">
-                <p style="color: rgba(255,255,255,0.3); font-family: 'Montserrat'; font-size: 10px; letter-spacing: 2px;">© 2024 CLAUDIALE JOYAS. TODOS LOS DERECHOS RESERVADOS.</p>
+                <p style="color: rgba(255,255,255,0.3); font-family: 'Montserrat'; font-size: 10px; letter-spacing: 2px;">© 2026 CLAUDIALE JOYAS. TODOS LOS DERECHOS RESERVADOS.</p>
             </div>
         </div>
     </footer>
 
-    <!-- MODAL QUICK VIEW -->
     <div class="modal-overlay" id="productModal" onclick="closeModal(event)">
         <div class="modal-content" onclick="event.stopPropagation()">
             <button class="modal-close" onclick="closeModal(event)">&times;</button>
@@ -1065,7 +1316,6 @@
         </div>
     </div>
 
-    <!-- CARRITO LATERAL -->
     <div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
     <div class="cart-drawer" id="cartDrawer">
         <div class="cart-header">
@@ -1086,6 +1336,16 @@
         </div>
     </div>
 
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.164.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.164.0/examples/jsm/"
+            }
+        }
+    </script>
+    <script type="module" src="js/main.js"></script>
+
     <script>
         // CURSOR
         const cursor = document.getElementById('cursor-custom');
@@ -1100,6 +1360,45 @@
                 }, 40);
             });
         });
+
+        // EFECTO DE ESCRITURA ANIMADA
+        const searchWords = [
+            "Anillo de compromiso diamante princesa...", 
+            "Alianzas de oro rosa 18k para boda...", 
+            "Collar de perlas personalizado...",
+            "Gargantilla de platino y zafiros..."
+        ];
+        let wordIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        const searchInput = document.getElementById('typing-search');
+
+        function typeEffect() {
+            const currentWord = searchWords[wordIndex];
+            
+            if (isDeleting) {
+                searchInput.placeholder = currentWord.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                searchInput.placeholder = currentWord.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            let typeSpeed = isDeleting ? 40 : 80;
+
+            if (!isDeleting && charIndex === currentWord.length) {
+                typeSpeed = 2500; 
+                isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                wordIndex = (wordIndex + 1) % searchWords.length;
+                typeSpeed = 500; 
+            }
+
+            setTimeout(typeEffect, typeSpeed);
+        }
+        
+        setTimeout(typeEffect, 1000);
 
         // CARRITO
         window.openCart = function (e) {
@@ -1151,7 +1450,7 @@
         function updateHoverListeners() {
             const hoverElements = document.querySelectorAll(
                 'a, button, input, select, .card-light, .float-card, .modal-close, .cart-close, .cart-overlay, ' +
-                '.categoria-item, .tarjeta-vertical, .btn-outline, .ig-item, .contacto-info'
+                '.categoria-item, .tarjeta-vertical, .btn-outline, .ig-item, .contacto-info, #typing-search, #search-btn, .card-coleccion'
             );
             hoverElements.forEach(el => {
                 el.addEventListener('mouseenter', () => cursor.classList.add('cursor-hover'));
@@ -1159,6 +1458,32 @@
             });
         }
         updateHoverListeners();
+
+        // ===== NUEVA FUNCIONALIDAD: REDIRIGIR A customize.html =====
+        (function() {
+            const searchBtn = document.getElementById('search-btn');
+            const searchInput = document.getElementById('typing-search');
+            
+            function goToCustomize() {
+                window.location.href = 'customize.html';
+            }
+            
+            if (searchBtn) {
+                searchBtn.addEventListener('click', goToCustomize);
+            }
+            
+            if (searchInput) {
+                // Como es readonly, al hacer clic también redirige (opcional pero mejora UX)
+                searchInput.addEventListener('click', goToCustomize);
+                // Si se pudiera escribir (no es el caso), al presionar Enter también redirige
+                searchInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        goToCustomize();
+                    }
+                });
+            }
+        })();
     </script>
 </body>
 </html>

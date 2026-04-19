@@ -22,6 +22,10 @@ export async function initThreeScene(containerId) {
     renderer.toneMappingExposure = 1.5; // Un poco menos quemado para destacar los brillos
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     
+    // ---> NUEVO: Activar procesamiento de sombras suaves en el motor <---
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    
     // --- ILUMINACIÓN REFLECTIVA PARA JOYAS ---
     const pmremGenerator = new THREE.PMREMGenerator(renderer);
     scene.environment = pmremGenerator.fromScene(new RoomEnvironment(), 0.04).texture;
@@ -34,6 +38,13 @@ export async function initThreeScene(containerId) {
     mainLight.position.set(5, 10, 5);
     mainLight.angle = Math.PI / 6;
     mainLight.penumbra = 0.2;
+    
+    // ---> NUEVO: Hacer que la luz principal proyecte sombras de alta calidad <---
+    mainLight.castShadow = true;
+    mainLight.shadow.mapSize.width = 2048; // Alta resolución para sombras nítidas
+    mainLight.shadow.mapSize.height = 2048;
+    mainLight.shadow.bias = -0.0001; // Evita artefactos visuales (shadow acne) en el metal
+    
     scene.add(mainLight);
 
     // 2. Luz de relleno cálida (para resaltar el oro)
